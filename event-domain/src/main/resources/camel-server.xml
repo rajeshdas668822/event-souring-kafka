@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:camel="http://camel.apache.org/schema/spring"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+       http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd">
+	
+	
+	<import resource="classpath*:jms-broker.xml"/>	         
+		<camelContext id="camel-server" xmlns="http://camel.apache.org/schema/spring">
+		
+  <template id="camelTemplate"/>
+  <route>
+    <from uri="jms:queue:workflow"/>
+    <to uri="bean:workFlowService"/>
+  </route>
+
+            <route>
+                <from uri="jms:topic:commandHandler"/>
+                <to uri="bean:activeMqCommandConsumer"/>
+            </route>
+
+</camelContext>
+		
+	   
+		
+		     
+   </beans>

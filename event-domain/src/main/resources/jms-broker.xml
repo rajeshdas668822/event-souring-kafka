@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:camel="http://camel.apache.org/schema/spring"
+       xmlns:broker="http://activemq.apache.org/schema/core"
+       xsi:schemaLocation="
+         http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+         http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+         http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd
+         http://activemq.apache.org/schema/core http://activemq.apache.org/schema/core/activemq-core.xsd">
+	         
+			     
+		<!-- Camel JMSProducer to be able to send messages to a remote Active MQ server -->
+		<bean id="jms" class="org.apache.activemq.camel.component.ActiveMQComponent">
+		  <property name="connectionFactory">
+		    <bean class="org.apache.activemq.spring.ActiveMQConnectionFactory">
+		      <property name="brokerURL" value="tcp://localhost:61616"/>
+		     <!--  <property name="trustAllPackages" value="true"/> -->
+		    </bean>
+		  </property>
+		</bean>
+		     
+   </beans>
