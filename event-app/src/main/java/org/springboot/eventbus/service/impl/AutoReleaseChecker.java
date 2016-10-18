@@ -1,10 +1,12 @@
 package org.springboot.eventbus.service.impl;
 
+import lombok.extern.slf4j.Slf4j;
 import org.activiti.engine.delegate.DelegateExecution;
 import org.springboot.eventbus.dao.OrderDao;
 import org.springboot.eventbus.dao.UserDao;
 import org.springboot.eventbus.entity.Order;
 import org.springboot.eventbus.services.AutoRelease;
+import org.springboot.eventbus.util.OrderStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,18 +25,18 @@ public class AutoReleaseChecker implements AutoRelease{
         String orderId = (String)execution.getVariable("orderID");
         Integer limitAmount = (Integer)execution.getVariable("limitAmount");
         Order order = orderDao.findOrderById(orderId);
-        System.out.println(" Checking Auto Release ");
-        System.out.println(" Order ID: " + order.getOrderId());
-        System.out.println( " Order Amount: " + order.getAmount());
-        System.out.println(" Order Limit: " + limitAmount);
-        System.out.println(" Order isAutoRelease: " + order.getStandalone());
+        System.out.println("Checking Auto Release ");
+        System.out.println("Order ID: " + order.getOrderId());
+        System.out.println( "Order Amount: " + order.getAmount());
+        System.out.println("Order Limit: " + limitAmount);
+        System.out.println("Order isAutoRelease: " + order.getStdAlone());
         boolean isAutoRelease = false;
 
-        if(order.getStandalone() && order.getAmount() < limitAmount){
+        if(order.getStdAlone() && order.getAmount() < limitAmount){
             isAutoRelease = true ;
-            order.setStatus("Pending");
+            order.setStatus(OrderStatus.PENDING.getValue());
         }else{
-            order.setStatus("Init");
+            order.setStatus(OrderStatus.INIT.getValue());
         }
         execution.setVariable("isAutoRelease", ""+isAutoRelease);
 

@@ -34,4 +34,13 @@ public class OrderDaoImpl implements OrderDao {
         entityManager.persist(order);
        // entityManager.flush();
     }
+
+
+    @Override
+    @Transactional
+    public void updateOrder(Order order) {
+       //entityManager.find(Order.class,order.getOrderId());
+        entityManager.merge(order);
+        //entityManager.flush();
+    }
 }

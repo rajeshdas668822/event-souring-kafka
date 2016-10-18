@@ -29,9 +29,11 @@ import java.util.Map;
 /**
  * Base interface for handling commands that are published on the command bus.
  */
-public interface CommandHandler {
+public interface CommandHandler<T>{
 
-    public void handleMessage(final Map<String, Object> eventEntries);
+   // public void handleMessage(final Map<String, Object> eventEntries);
+	
+	public  void handleMessage(final T event);
 
     public String getInterest();
 }

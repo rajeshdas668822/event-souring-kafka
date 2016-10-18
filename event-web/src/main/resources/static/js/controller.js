@@ -85,7 +85,7 @@ app.controller('taskController',function($scope, $http,userService ,$uibModal,$l
 			 $scope.pendingTask = data['Pending'];  
 			 $scope.initTask = data['Init'];
 			 $scope.workingTask = data['Working']
-			 $scope.filledTask = data['Filled']
+			 $scope.filledTask = data['Fill']
 			 $scope.partialFillTask = data['Partially Filled']
 			 $scope.pendingCancelTask = data['Pending Cancel']
 			 console.log("Data Geting returned is "+data['Pending']);
@@ -110,9 +110,9 @@ app.controller('taskController',function($scope, $http,userService ,$uibModal,$l
                   console.log("isPendingCancelExist :  "+data['Pending Cancel'].length);
                   $scope.taskStatus.isPendingCancelExist = data['Pending Cancel'].length > 0 ? true : false;
                   console.log("taskStatus.isPendingCancelExist :  "+$scope.taskStatus.isPendingCancelExist);
-             }if (angular.isDefined(data['Filled'])){
-                console.log("isFillExist :  "+data['Filled'].length);
-                $scope.taskStatus.isFillExist = data['Filled'].length > 0 ? true : false;
+             }if (angular.isDefined(data['Fill'])){
+                console.log("isFillExist :  "+data['Fill'].length);
+                $scope.taskStatus.isFillExist = data['Fill'].length > 0 ? true : false;
                 console.log("taskStatus.isFillExist :  "+$scope.taskStatus.isFillExist);
              }if (angular.isDefined(data['Partially Filled'])){
                   console.log("isPartialFillExist :  "+data['Partially Filled'].length);

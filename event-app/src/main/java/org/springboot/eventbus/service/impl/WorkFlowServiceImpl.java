@@ -10,6 +10,7 @@ import org.activiti.engine.task.Task;
 import org.springboot.eventbus.dao.OrderDao;
 import org.springboot.eventbus.entity.Order;
 import org.springboot.eventbus.services.WorkflowService;
+import org.springboot.eventbus.util.OrderStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -57,7 +58,7 @@ public class WorkFlowServiceImpl implements WorkflowService {
         processVariable.put("counterParty", order.getCounterParty());
         processVariable.put("costPrice", order.getCostPrice());
         processVariable.put("limitAmount", "10000");
-        processVariable.put("isStandalone", order.getStandalone());
+        processVariable.put("isStandalone", order.getStandAlone());
 
         ProcessDefinition definition = repositoryService.createProcessDefinitionQuery()
                 .processDefinitionKey(processName).latestVersion().singleResult();
@@ -79,21 +80,22 @@ public class WorkFlowServiceImpl implements WorkflowService {
 			//assertEquals("Init",task.getName());
 			Map<String, Object> variables = taskService.getVariables(task.getId());
 			System.out.println("Task Local Variable ::" + variables);
-			Order storedOrder = (Order)variables.get("order");
+		/*	Order storedOrder = (Order)variables.get("orderID");
 			if(storedOrder!=null && storedOrder.getOrderId().equals(order.getOrderId())){
-				order.setTaskId(task.getId());
+				order.setTaskId(task.getId());*/
 			if(actionType.equals("Accept")){
-					order.setStatus("Working");
+					order.setStatus(OrderStatus.WORKING.getValue());
 				}else{
 					order.setStatus(actionType);
 				}
 				variables.put("order",order);
 				variables.put("actionType", actionType);
-				taskService.complete(task.getId(),variables);
-			}else {
+			    orderDao.updateOrder(order);
+			    taskService.complete(task.getId(),variables);
+			}/*else {
 				 System.out.println("No Action Reqire for this Order :"+order);
-			}
-		}
+			}*/
+		//}
 
 	}
 	
@@ -134,19 +136,36 @@ public class WorkFlowServiceImpl implements WorkflowService {
 			// assertEquals("Init",task.getName());
 			Map<String, Object> variables = taskService.getVariables(task.getId());
 			System.out.println("Task Local Variable ::" + variables);
-			Order storedOrder = (Order) variables.get("order");
-			if (storedOrder != null && storedOrder.getOrderId().equals(order.getOrderId())) {
 				order.setTaskId(task.getId());
-				order.setStatus(actionType);
+				order.setStatus(OrderStatus.PENDING_CANCEL.getValue());
 				variables.put("order", order);
 				variables.put("actionType", actionType);
-				variables.put("previousAction", task.getName()); 
+				variables.put("previousAction", task.getName());
+				orderDao.updateOrder(order);
 				taskService.complete(task.getId(), variables);
-			} else {
-				System.out.println("No Action Reqire for this Order :" + order);
-			}
+
 		}
 
+	}
+
+
+
+	public void processWorkingOrder(Order order,String actionType){
+		List<Task> taskList = taskService.createTaskQuery().executionId(String.valueOf(order.getOrderId())).list();
+		if("Cancel".equals(actionType)){
+			processCancelOrder(order,actionType);
+		}else {
+			for (Task task : taskList) {
+				System.out.println(" Task Name ::" + task.getName());
+				Map<String, Object> variables = taskService.getVariables(task.getId());
+				System.out.println("Task Local Variable ::" + variables);
+				Order storedOrder = (Order) variables.get("order");
+				variables.put("order", order);
+				variables.put("actionType", actionType);
+				variables.put("previousAction", task.getName());
+				taskService.complete(task.getId(), variables);
+			}
+		}
 	}
 
 	public  List<Order> loadTask(String userId) {
@@ -168,17 +187,9 @@ public class WorkFlowServiceImpl implements WorkflowService {
 		}
 		List<Order> orderList = new ArrayList<>();
 		for (Task task : taskList) {
-			Map<String, Object> variables = taskService.getVariables(task.getId());
+			 Map<String, Object> variables = taskService.getVariables(task.getId());
 			 String orderId = (String)variables.get("orderID");
-
-			Order order = orderDao.findOrderById(orderId);
-			/*if (order != null) {
-				orderList = taskListMap.getOrDefault(task.getName(), new ArrayList<Order>());
-				orderList.add(order);
-				taskListMap.putIfAbsent(task.getName(), orderList);
-
-			}*/
-
+			 Order order = orderDao.findOrderById(orderId);
 			orderList.add(order);
 		}
 		System.out.println(orderList);

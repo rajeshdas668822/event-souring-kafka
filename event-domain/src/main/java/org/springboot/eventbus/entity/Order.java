@@ -6,7 +6,7 @@ import java.io.*;
 @Entity
 @Table(name = "T_ORDER")
 @NamedQuery(name="order.findOrderByID",  query="SELECT o FROM Order o   WHERE o.orderId = :orderId")
-public class Order implements Externalizable {
+public class Order implements Serializable {
 	
 	/**
 	 * 
@@ -21,7 +21,13 @@ public class Order implements Externalizable {
 	private String productType;
 
 	@Column(name = "IS_STANDALONE")
-	private Boolean isStandalone;
+	private Boolean stdAlone;
+
+	
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
 
 	@Column(name = "AMOUNT")
 	private Double amount;
@@ -45,6 +51,17 @@ public class Order implements Externalizable {
 	@Column(name = "FILLAMOUNT")
 	private Double fillAmount;
 
+    @Transient
+	private String standAlone;
+
+
+	public String getStandAlone() {
+		return standAlone;
+	}
+
+	public void setStandAlone(String standAlone) {
+		this.standAlone = standAlone;
+	}
 
 	public String getOrderId() {
 		return orderId;
@@ -62,13 +79,7 @@ public class Order implements Externalizable {
 		this.productType = productType;
 	}
 
-	public Boolean getStandalone() {
-		return isStandalone;
-	}
-
-	public void setStandalone(Boolean standalone) {
-		isStandalone = standalone;
-	}
+	
 
 	public Double getAmount() {
 		return amount;
@@ -118,6 +129,8 @@ public class Order implements Externalizable {
 		this.taskId = taskId;
 	}
 
+
+
 	public Double getFillAmount() {
 		return fillAmount;
 	}
@@ -126,9 +139,17 @@ public class Order implements Externalizable {
 		this.fillAmount = fillAmount;
 	}
 
+	public Boolean getStdAlone() {
+		return stdAlone;
+	}
+
+	public void setStdAlone(Boolean stdAlone) {
+		this.stdAlone = stdAlone;
+	}
 
 
-	@Override
+
+	/*@Override
 	public void writeExternal(ObjectOutput out) throws IOException {
 
 		out.writeObject(orderId);
@@ -152,5 +173,5 @@ public class Order implements Externalizable {
 		this.costPrice = (Double)in.readObject();
 		this.status = (String)in.readObject();
 		this.fillAmount = (Double)in.readObject();
-	}
+	}*/
 }

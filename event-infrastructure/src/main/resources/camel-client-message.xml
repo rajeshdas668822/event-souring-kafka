@@ -12,15 +12,9 @@
 	         
 		<camel:camelContext id="camel-client">
 		  <camel:template id="camelTemplate"/>
-
-			<camel:route>
-				<camel:from uri="jms:topic:commandHandler"/>
-				<camel:to uri="bean:activeMqCommandConsumer"/>
-			</camel:route>
-
 		</camel:camelContext>
 		
-	   <import resource="classpath*:jms-broker.xml"/>	
+	   <import resource="classpath*:jms-broker.xml"/>
 		
 	  <camel:proxy   id="workFlowService"   serviceInterface="org.springboot.eventbus.services.WorkflowService"      serviceUrl="jms:queue:workflow"/>
 		     

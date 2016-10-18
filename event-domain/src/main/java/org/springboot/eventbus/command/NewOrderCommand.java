@@ -10,24 +10,25 @@ import java.util.UUID;
 /**
  * Created by rdas on 9/29/2016.
  */
-public class NewOrderCommand extends Command {
+public class NewOrderCommand extends Command<Order> {
 
 
-    private Order order;
+    //private Order order;
+    private CommandType type;
 
-    public void setOrder(Order order) {
+    /*public void setOrder(Order order) {
         this.order = order;
     }
 
     public Order getOrder() {
         return order;
 
-    }
+    }*/
 
-    public NewOrderCommand(final UUID id, Order order) {
-
-        this.id = id;
-        this.order = order;
+    public NewOrderCommand(final UUID id, Order order,CommandType type) {
+        this.id   = id;
+        this.body = order;
+        this.type = type;
 
     }
 
@@ -35,12 +36,14 @@ public class NewOrderCommand extends Command {
         super();
     }
 
-    @Override
+   /* @Override
     public Map<String, Object> getEntries() {
         final Map<String, Object> commandEntries = new HashMap<>();
 
         commandEntries.put(Constant.MAPKEY_ID, this.id);
         commandEntries.put(Constant.MAPKEY_ORDER, this.order);
+        commandEntries.put(Constant.MAPKEY_HANDLER_NAME, "NewOrderCommand");
+        super.setEntries(commandEntries);
         return commandEntries;
-    }
+    }*/
 }

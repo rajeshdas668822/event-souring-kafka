@@ -5,14 +5,17 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-
-import org.springboot.eventbus.broker.ActiveMQPublisher;
+import org.springboot.eventbus.broker.EventPublisher;
+import org.springboot.eventbus.command.CommandType;
 import org.springboot.eventbus.command.FetchTaskCommand;
 import org.springboot.eventbus.command.NewOrderCommand;
+import org.springboot.eventbus.command.OrderFlowCommand;
 import org.springboot.eventbus.domain.RequestInfo;
 import org.springboot.eventbus.domain.User;
 import org.springboot.eventbus.entity.Order;
 import org.springboot.eventbus.services.WorkflowService;
+import org.springboot.eventbus.util.ActionType;
+import org.springboot.eventbus.util.EventPattern;
 import org.springboot.eventbus.util.RequestBlocker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -31,14 +34,14 @@ public class OrderController {
 	private boolean iskafkaEnable;
 
 	@Autowired
-	private ActiveMQPublisher commandPublisher;
+	private EventPublisher commandPublisher;
 
 	
 	public enum Action{
 		Reject,Accept,Cancel
 	}
 	
-	@Autowired
+	//@Autowired
 	WorkflowService workFlowService;
 	
 	 @RequestMapping(value="/submitOrder",method = RequestMethod.POST)
@@ -48,8 +51,8 @@ public class OrderController {
 		 if(order!=null){
 			 order.setStatus("init");
 			 if(iskafkaEnable){
-				 NewOrderCommand newOrderCommand = new NewOrderCommand(UUID.randomUUID(),order);
-				 commandPublisher.publishMessage(newOrderCommand);
+				 NewOrderCommand newOrderCommand = new NewOrderCommand(UUID.randomUUID(),order,CommandType.Request);
+				 commandPublisher.publish(newOrderCommand);
 			 }else {
 				 workFlowService.initWorkFlow(order);
 			 }
@@ -65,13 +68,10 @@ public class OrderController {
 		 //return
 		 if(iskafkaEnable){
 			 UUID id = UUID.randomUUID();
-			 FetchTaskCommand fetchTaskCommand = new FetchTaskCommand (id,user);
-			 commandPublisher.publishMessage(fetchTaskCommand);
-			 try {
-				 orderList = (List) RequestBlocker.waitForResponse(id);
-			 }catch (Exception ex){
-				 ex.printStackTrace();
-			 }
+			 FetchTaskCommand fetchTaskCommand = new FetchTaskCommand (id,user,CommandType.Request);
+			 fetchTaskCommand.setSyncRequest(true);
+			 orderList = (List) commandPublisher.asyncSend(fetchTaskCommand);
+			 
 		 }else {
 			 orderList = workFlowService.loadTask(user.getUserId());
 		 }
@@ -86,7 +86,12 @@ public class OrderController {
 	 @ResponseBody
 	 public boolean approveOrder(@RequestBody Order order){
 		 System.out.println("Inside Approve"+order);
-		 workFlowService.processOrder(order,"Accept");
+		 OrderFlowCommand orderFlowCommand = new OrderFlowCommand();
+		 orderFlowCommand.setBody(order);
+		 orderFlowCommand.setActiontype(ActionType.APPROVE);
+		// orderFlowCommand.setSyncRequest(true);
+		 commandPublisher.publish(orderFlowCommand);
+		 //workFlowService.processOrder(order,"Accept");
 		 return true;
 	 }
 	 
@@ -95,8 +100,13 @@ public class OrderController {
 	 @ResponseBody
      public boolean rejectOrder(@RequestBody Order order){
 		 
-		 System.out.println("Inside Reject"+order);
-		 workFlowService.processOrder(order,"Reject");
+		 System.out.println("Inside Reject"+order.getOrderId());
+		 OrderFlowCommand orderFlowCommand = new OrderFlowCommand();
+		 orderFlowCommand.setBody(order);
+		 orderFlowCommand.setActiontype(ActionType.REJECT);
+		 commandPublisher.publish(orderFlowCommand);
+
+		 //workFlowService.processOrder(order,"Reject");
 		 
 		 return true;
 	 }
@@ -106,8 +116,11 @@ public class OrderController {
 	 @ResponseBody
      public boolean cancelOrder(@RequestBody Order order){
 		 
-		 System.out.println("Inside cancelOrder"+order);		 
-		 workFlowService.processCancelOrder(order,"Cancel");
+		 System.out.println("Inside cancelOrder"+order.getOrderId());
+		 OrderFlowCommand orderFlowCommand = new OrderFlowCommand();
+		 orderFlowCommand.setBody(order);
+		 orderFlowCommand.setActiontype(ActionType.CANCEL);
+		 commandPublisher.publish(orderFlowCommand);
 		 
 		 return true;
 	 }
@@ -116,9 +129,12 @@ public class OrderController {
 	 @RequestMapping(value="/cancelWorkingOrder",method = RequestMethod.POST)
 	 @ResponseBody
      public boolean cancelWorkingOrder(@RequestBody Order order){
-		 
-		 System.out.println("Inside cancelOrder"+order);		 
-		 workFlowService.processFillOrder(order,"Reject");
+
+		 System.out.println("Inside cancelOrder"+order.getOrderId());
+		 OrderFlowCommand orderFlowCommand = new OrderFlowCommand();
+		 orderFlowCommand.setBody(order);
+		 orderFlowCommand.setActiontype(ActionType.CANCELWORKINGORDER);
+		 commandPublisher.publish(orderFlowCommand);
 		 
 		 return true;
 	 }
@@ -128,8 +144,14 @@ public class OrderController {
 	@RequestMapping(value = "/fillOrder", method = RequestMethod.POST)
 	@ResponseBody
 	public boolean fillOrder(@RequestBody Order order) {
-		System.out.println("Inside cancelOrder" + order.getFillAmount());
-		workFlowService.processFillOrder(order,"");
+		System.out.println("Inside fillOrder" + order.getFillAmount());
+
+		OrderFlowCommand orderFlowCommand = new OrderFlowCommand();
+		orderFlowCommand.setBody(order);
+		orderFlowCommand.setActiontype(ActionType.PROCESSFILL);
+		// orderFlowCommand.setSyncRequest(true);
+		commandPublisher.publish(orderFlowCommand);
+		//workFlowService.processFillOrder(order,"");
 		return true;
 	}
 	

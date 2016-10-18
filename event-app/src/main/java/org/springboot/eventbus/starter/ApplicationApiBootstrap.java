@@ -16,12 +16,7 @@ import org.springframework.context.annotation.Configuration;
 @ComponentScan("org.springboot.eventbus")
 public class ApplicationApiBootstrap {
 	
-	  public static void main(String[] args) {
-		 /* ApplicationContext ctx = 
-				   new AnnotationConfigApplicationContext(ActivitiConfig.class);*/
-		  
-		 // SpringApplication.run(ApplicationApiBootstrap.class, args);
-		  
+	  public static void main(String[] args) {		 
 	      SpringApplication app = new SpringApplication(ApplicationApiBootstrap.class);
 	         app.setWebEnvironment(false); //<<<<<<<<<
 	         ConfigurableApplicationContext ctx = app.run(args);

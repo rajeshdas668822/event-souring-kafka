@@ -9,5 +9,8 @@ public class Constant {
     public static final String MAPKEY_ORDER = "Order";
     public static final String MAPKEY_ORDER_LIST = "orderList";
     public static final String MAPKEY_USER_ID = "userId";
+    public static final String MAPKEY_HANDLER_NAME="HandlerName";
+    
+    
 
 }

@@ -61,10 +61,13 @@ public class OrderCreationImpl implements OrderCreation{
 		order.setCounterParty(execution.getVariable("counterParty").toString());
 		order.setProductType(execution.getVariable("productType").toString());
 		order.setQuantity(Double.valueOf(execution.getVariable("quantity").toString()));
-       // if("Yes".equals(execution.getVariable("isStandalone").toString())) {
-		   order.setStandalone(Standalone.YES.getValue());
-		//}
-		//order.setStandalone(true);
+		String standAlone = (String)execution.getVariable("isStandalone");
+       if("Yes".equals(standAlone)) {
+		   order.setStdAlone(Standalone.YES.getValue());
+		}else{
+		   order.setStdAlone(Standalone.NO.getValue());
+	   }
+
         order.setStatus("Init");
 		order.setOrderId(execution.getProcessInstanceId());
 

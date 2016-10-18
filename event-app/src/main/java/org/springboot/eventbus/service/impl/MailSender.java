@@ -13,7 +13,7 @@ public class MailSender {
 
     public void sendMail(DelegateExecution execution){
 
-    	Double orderId = (Double)execution.getVariable("orderID");
+    	String orderId = (String)execution.getVariable("orderID");
         System.out.println("Mail Has been sent to CounterParty :: With Order ::"+orderId);
 
     }

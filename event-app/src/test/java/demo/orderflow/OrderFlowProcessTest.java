@@ -201,7 +201,7 @@ public class OrderFlowProcessTest extends AbstractTest {
         HistoricVariableUpdate orderUpdate = ((HistoricVariableUpdate) historicDetails.get(6));
         assertEquals("order", orderUpdate.getVariableName());
         Order order = (Order) orderUpdate.getValue();
-        assertEquals(true, order.getStandalone());
+        assertEquals(true, order.getStdAlone());
     }
 
 

@@ -8,19 +8,27 @@
 	
 	<import resource="classpath*:jms-broker.xml"/>	         
 		<camelContext id="camel-server" xmlns="http://camel.apache.org/schema/spring">
-		
   <template id="camelTemplate"/>
-  <route>
-    <from uri="jms:queue:workflow"/>
-    <to uri="bean:workFlowService"/>
-  </route>
+
+      <!--  <route>
+            <from uri="jms:queue:requestQueue"/>
+            <log message="body============${body}"/>
+            <to uri="bean:activeMqCommandConsumer"/>
+        </route>-->
+
+        <route>
+                <from uri="jms:topic:commandHandler"/>
+                <log message="body============${body}"/>
+                <to uri="bean:activeMqCommandConsumer"/>
+        </route>
+
 
             <route>
-                <from uri="jms:topic:commandHandler"/>
+                <from uri="jms:queue:commandHandler"/>
+                <log message="body============${body}"/>
                 <to uri="bean:activeMqCommandConsumer"/>
             </route>
-
-</camelContext>
+  </camelContext>
 		
 	   
 		

@@ -14,17 +14,24 @@ import java.util.UUID;
 public class TaskLoadedCommand  extends Command{
 
     List<Order> orderList;
-
-    public TaskLoadedCommand (UUID id,  List<Order> orderList ){
-        this.id = id;
-        this.orderList = orderList;
+    private CommandType type;
+    public List<Order> getOrderList() {
+        return orderList;
     }
 
-    @Override
+    public TaskLoadedCommand (UUID id,  List<Order> orderList,CommandType type ){
+        this.id = id;
+        this.orderList = orderList;
+        this.type = type;
+    }
+
+    /*@Override
     public Map<String, Object> getEntries() {
         final Map<String, Object> commandEntries = new HashMap<>();
         commandEntries.put(Constant.MAPKEY_ID, this.id);
         commandEntries.put(Constant.MAPKEY_ORDER_LIST, this.orderList);
+        commandEntries.put(Constant.MAPKEY_HANDLER_NAME, "TaskLoadedCommand");
+        super.setEntries(commandEntries);
         return commandEntries;
-    }
+    }*/
 }

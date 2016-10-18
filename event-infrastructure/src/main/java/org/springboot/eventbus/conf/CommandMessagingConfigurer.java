@@ -22,14 +22,12 @@
  * SOFTWARE.
  */
 
-package org.springboot.eventbus.config;
+package org.springboot.eventbus.conf;
 
-import com.google.gson.Gson;
+import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springboot.eventbus.conf.ActiveMqCommandConsumer;
-import org.springboot.eventbus.conf.CommandHandlerUtils;
-import org.springboot.eventbus.conf.CommandMessagingConsumer;
 import org.springboot.eventbus.handler.CommandHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -39,10 +37,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.task.SimpleAsyncTaskExecutor;
 import org.springframework.core.task.TaskExecutor;
 
-import javax.annotation.PostConstruct;
-import java.io.File;
-import java.io.IOException;
-import java.util.Map;
+import com.google.gson.Gson;
 
 /**
  * Spring boot configuration class for registering the queues on Rabbit for command bus
@@ -58,8 +53,11 @@ public class CommandMessagingConfigurer {
     @Autowired
     private ApplicationContext context;
 
-    @Autowired
+   // @Autowired
     private Gson gson;
+    
+
+
 
     @Autowired
     private TaskExecutor consumerTaskExecutor;
@@ -73,28 +71,11 @@ public class CommandMessagingConfigurer {
     @Value("${kafka.consumer.timeout}")
     private Long timeout;
 
-    /*@PostConstruct
-    private void setup() {
-
-        try {
-
-
-           // final File consumerPropertiesFile = this.context.getResource("classpath:" + this.kafkaConsumerProperties).getFile();
-
-           // CommandMessagingConsumer eventConsumer = new CommandMessagingConsumer(consumerPropertiesFile, this.topic, this.timeout, this.gson, registry);
-
-
-
-           // this.consumerTaskExecutor.execute(eventConsumer);
-        } catch (Exception exception) {
-            log.error("Couldn't load consumer properties file");
-        }
-    }*/
 
 
     @Bean
     public ActiveMqCommandConsumer activeMqCommandConsumer(){
-        final Map<String, CommandHandler> registry = CommandHandlerUtils.buildCommandHandlersRegistry(this.commandHandlerPackageBase, this.context);
+        final Map<String, CommandHandler> registry = CommandHandlerUtils.buildCommandHandlersRegistry(this.commandHandlerPackageBase, this.context);        
         ActiveMqCommandConsumer eventConsumer = new ActiveMqCommandConsumer(this.timeout,this.gson, registry);
         return eventConsumer;
     }
@@ -102,8 +83,15 @@ public class CommandMessagingConfigurer {
 
     @Bean
     public Gson gson() {
-        return new Gson();
+    	 gson = new Gson();    	
+    	return gson;
     }
+    
+    
+    
+
+
+
 
     @Bean
     public TaskExecutor consumerTaskExecutor() {

@@ -1,23 +1,18 @@
 package org.springboot.eventbus.handler;
 
-import lombok.extern.slf4j.Slf4j;
-
-import org.springboot.eventbus.broker.ActiveMQPublisher;
-import org.springboot.eventbus.command.TaskLoadedCommand;
+import org.springboot.eventbus.command.NewOrderCommand;
 import org.springboot.eventbus.entity.Order;
 import org.springboot.eventbus.services.WorkflowService;
-import org.springboot.eventbus.util.Constant;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.Map;
-import java.util.UUID;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Created by rdas on 9/28/2016.
  */
 
 @Slf4j
-public class NewOrderCommandHandler implements CommandHandler {
+public class NewOrderCommandHandler implements CommandHandler<NewOrderCommand> {
     @Autowired
     WorkflowService workflowService;
 
@@ -28,15 +23,19 @@ public class NewOrderCommandHandler implements CommandHandler {
 
 
     @Override
-    public void handleMessage(Map<String, Object> eventEntries) {
+    public void handleMessage(NewOrderCommand command) {
+    	/*Map<String, Object> eventEntries = command.getEntries();
         if (eventEntries.containsKey(Constant.MAPKEY_ID)) {
             final UUID id = UUID.fromString(eventEntries.get(Constant.MAPKEY_ID).toString());
-            final Order order = (Order) eventEntries.get(Constant.MAPKEY_ORDER);
-           if(order!=null) {
-               workflowService.initWorkFlow(order);
-               System.out.println("Order Submited :::");
-           }
+
+        }*/
+
+        final Order order = (Order)command.getBody();
+        if(order!=null) {
+            workflowService.initWorkFlow(order);
+            System.out.println("Order Submited :::");
         }
+      // return null;
     }
 
     @Override

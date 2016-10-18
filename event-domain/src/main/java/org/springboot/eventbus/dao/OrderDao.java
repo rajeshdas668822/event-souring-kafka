@@ -9,4 +9,6 @@ public interface OrderDao {
 
     public Order findOrderById(String orderId);
     public  void saveOrder(Order order);
+
+    public  void updateOrder(Order order);
 }
