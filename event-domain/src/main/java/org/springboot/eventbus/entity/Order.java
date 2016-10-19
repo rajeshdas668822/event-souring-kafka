@@ -147,6 +147,23 @@ public class Order implements Serializable {
 		this.stdAlone = stdAlone;
 	}
 
+	@Override
+	public String toString() {
+		return "Order{" +
+				"orderId='" + orderId + '\'' +
+				", productType='" + productType + '\'' +
+				", stdAlone=" + stdAlone +
+				", amount=" + amount +
+				", quantity=" + quantity +
+				", counterParty='" + counterParty + '\'' +
+				", costPrice=" + costPrice +
+				", status='" + status + '\'' +
+				", taskId='" + taskId + '\'' +
+				", fillAmount=" + fillAmount +
+				", standAlone='" + standAlone + '\'' +
+				'}';
+	}
+
 
 
 	/*@Override

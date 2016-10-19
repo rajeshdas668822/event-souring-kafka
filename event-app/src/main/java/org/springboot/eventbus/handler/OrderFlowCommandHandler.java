@@ -26,8 +26,8 @@ public class OrderFlowCommandHandler implements CommandHandler<OrderFlowCommand>
                     System.out.println("Inside Approve->" + order.getOrderId());
                     break;
                 case PROCESSFILL:
-                    workflowService.processFillOrder(order,"ProcessFill");
-                    System.out.println("processFillOrder triggered->" + order.getOrderId());
+                    workflowService.processWorkingOrder(order);
+                    System.out.println("processWorkingOrder triggered->" + order.getOrderId());
                     break;
                 case REJECT:
                     workflowService.processOrder(order,"Reject");
@@ -38,7 +38,7 @@ public class OrderFlowCommandHandler implements CommandHandler<OrderFlowCommand>
                     System.out.println("Cancel triggered->" + order.getOrderId());
                     break;
                 case CANCELWORKINGORDER:
-                    workflowService.processFillOrder(order,"Cancel");
+                    workflowService.processOrder(order,"Cancel");
                     System.out.println("Rejected Working Order Triggered->" + order.getOrderId());
                     break;
 

@@ -27,12 +27,12 @@ public class FillOrderValidatorImpl implements FillOrderValidator {
         Order order = (Order) execution.getVariable("order");
         boolean isFill = false;
         String workingOrderAction = "";
-        String pendingCancelAction = (String)execution.getVariable("pendingCancelAction");
+        String pendingCancelAction = (String)execution.getVariable("actionType");
         if(pendingCancelAction != null && pendingCancelAction == "Cancel"){
             execution.setVariable("previousAction", "Working Order" );
             workingOrderAction = "Cancel";
             order.setStatus("Pending Cancel");
-            execution.setVariable("workingOrderAction","Reject");
+            execution.setVariable("workingOrderAction",workingOrderAction);
             execution.setVariable("order",order);
         }else{
             double convertedFilledAmount = (Double)execution.getVariable("filledAmount");

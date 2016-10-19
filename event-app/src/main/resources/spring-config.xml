@@ -66,7 +66,8 @@
 				<prop key="hibernate.generate_statistics">false</prop>
 				<prop key="hibernate.cache.use_structured_entries">true</prop>
 				<prop key="javax.persistence.sharedCache.mode">ENABLE_SELECTIVE</prop>				
-				<prop key="hibernate.cache.hazelcast.shutdown_on_session_factory_close">true</prop>				
+				<prop key="hibernate.cache.hazelcast.shutdown_on_session_factory_close">true</prop>
+				<prop key="hibernate.enable_lazy_load_no_trans">true</prop>
 			</props>
 		</property>
 	</bean>	

@@ -72,47 +72,63 @@ public class WorkFlowServiceImpl implements WorkflowService {
 	}
 
 
-	public void processOrder(Order order, String actionType){
-		//List<Task> taskList = taskService.createTaskQuery().taskAssignee("fozzie").list();		
-		 List<Task> taskList = taskService.createTaskQuery().executionId(String.valueOf(order.getOrderId())).list();
+
+	public void processInitOrder(Order order, String actionType){
+		List<Task> taskList = taskService.createTaskQuery().executionId(String.valueOf(order.getOrderId())).list();
 		for (Task task : taskList) {
 			System.out.println(" Task Name ::" + task.getName());
-			//assertEquals("Init",task.getName());
 			Map<String, Object> variables = taskService.getVariables(task.getId());
 			System.out.println("Task Local Variable ::" + variables);
-		/*	Order storedOrder = (Order)variables.get("orderID");
-			if(storedOrder!=null && storedOrder.getOrderId().equals(order.getOrderId())){
-				order.setTaskId(task.getId());*/
+			order.setStatus(OrderStatus.PENDING.getValue());
+			orderDao.updateOrder(order);
+			taskService.complete(task.getId(),variables);
+		}
+
+	}
+
+
+	public void processOrder(Order order, String actionType){
+	 List<Task> taskList = taskService.createTaskQuery().executionId(String.valueOf(order.getOrderId())).list();
+		for (Task task : taskList) {
+			System.out.println(" Task Name ::" + task.getName());
+			Map<String, Object> variables = taskService.getVariables(task.getId());
+			OrderStatus orderStatus = OrderStatus.get(order.getStatus());
 			if(actionType.equals("Accept")){
-					order.setStatus(OrderStatus.WORKING.getValue());
-				}else{
-					order.setStatus(actionType);
+				switch(orderStatus){
+					case INIT:
+						order.setStatus(OrderStatus.PENDING.getValue());
+						break;
+					case PENDING:
+						order.setStatus(OrderStatus.WORKING.getValue());
+						break;
+					default:
 				}
-				variables.put("order",order);
-				variables.put("actionType", actionType);
-			    orderDao.updateOrder(order);
-			    taskService.complete(task.getId(),variables);
-			}/*else {
-				 System.out.println("No Action Reqire for this Order :"+order);
-			}*/
-		//}
+
+			}else if(actionType.equals("Reject")){
+				order.setStatus(OrderStatus.REJECT.getValue());
+			}
+			variables.put("actionType",actionType);
+			orderDao.updateOrder(order);
+			taskService.complete(task.getId(),variables);
+		}
 
 	}
 	
 	
-	public void processFillOrder(Order order, String actionType) {
+	/*public void processFillOrder(Order order, String actionType) {
 		List<Task> taskList = taskService.createTaskQuery().executionId(String.valueOf(order.getOrderId())).list();
 		for (Task task : taskList) {
 			System.out.println(" Task Name ::" + task.getName());
 			Map<String, Object> variables = taskService.getVariables(task.getId());
 			variables.put("filledAmount", order.getFillAmount());
 			variables.put("pendingCancelAction",actionType);
-			//order.setStatus("Fill");
+			order.setStatus(OrderStatus.PENDING_CANCEL.getValue());
 			variables.put("order", order);
+			orderDao.updateOrder(order);
 			taskService.complete(task.getId(), variables);
 		}
 
-	}
+	}*/
 	
 
 	
@@ -133,7 +149,6 @@ public class WorkFlowServiceImpl implements WorkflowService {
 		List<Task> taskList = taskService.createTaskQuery().executionId(String.valueOf(order.getOrderId())).list();
 		for (Task task : taskList) {
 			System.out.println(" Task Name ::" + task.getName());
-			// assertEquals("Init",task.getName());
 			Map<String, Object> variables = taskService.getVariables(task.getId());
 			System.out.println("Task Local Variable ::" + variables);
 				order.setTaskId(task.getId());
@@ -150,21 +165,14 @@ public class WorkFlowServiceImpl implements WorkflowService {
 
 
 
-	public void processWorkingOrder(Order order,String actionType){
+	public void processWorkingOrder(Order order){
 		List<Task> taskList = taskService.createTaskQuery().executionId(String.valueOf(order.getOrderId())).list();
-		if("Cancel".equals(actionType)){
-			processCancelOrder(order,actionType);
-		}else {
-			for (Task task : taskList) {
-				System.out.println(" Task Name ::" + task.getName());
-				Map<String, Object> variables = taskService.getVariables(task.getId());
-				System.out.println("Task Local Variable ::" + variables);
-				Order storedOrder = (Order) variables.get("order");
-				variables.put("order", order);
-				variables.put("actionType", actionType);
-				variables.put("previousAction", task.getName());
-				taskService.complete(task.getId(), variables);
-			}
+		for (Task task : taskList) {
+			System.out.println(" Task Name ::" + task.getName());
+			Map<String, Object> variables = taskService.getVariables(task.getId());
+			variables.put("filledAmount", order.getFillAmount());
+			variables.put("order", order);
+			taskService.complete(task.getId(), variables);
 		}
 	}
 

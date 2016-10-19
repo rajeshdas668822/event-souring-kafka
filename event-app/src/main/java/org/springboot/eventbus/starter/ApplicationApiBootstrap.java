@@ -18,7 +18,7 @@ public class ApplicationApiBootstrap {
 	
 	  public static void main(String[] args) {		 
 	      SpringApplication app = new SpringApplication(ApplicationApiBootstrap.class);
-	         app.setWebEnvironment(false); //<<<<<<<<<
+	         app.setWebEnvironment(false);
 	         ConfigurableApplicationContext ctx = app.run(args);
 		  
 	    }

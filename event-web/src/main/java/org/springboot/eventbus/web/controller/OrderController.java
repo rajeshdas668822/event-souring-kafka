@@ -90,7 +90,7 @@ public class OrderController {
 		 orderFlowCommand.setBody(order);
 		 orderFlowCommand.setActiontype(ActionType.APPROVE);
 		// orderFlowCommand.setSyncRequest(true);
-		 commandPublisher.publish(orderFlowCommand);
+		 commandPublisher.asyncSend(orderFlowCommand);
 		 //workFlowService.processOrder(order,"Accept");
 		 return true;
 	 }
@@ -104,7 +104,7 @@ public class OrderController {
 		 OrderFlowCommand orderFlowCommand = new OrderFlowCommand();
 		 orderFlowCommand.setBody(order);
 		 orderFlowCommand.setActiontype(ActionType.REJECT);
-		 commandPublisher.publish(orderFlowCommand);
+		 commandPublisher.asyncSend(orderFlowCommand);
 
 		 //workFlowService.processOrder(order,"Reject");
 		 
@@ -120,7 +120,7 @@ public class OrderController {
 		 OrderFlowCommand orderFlowCommand = new OrderFlowCommand();
 		 orderFlowCommand.setBody(order);
 		 orderFlowCommand.setActiontype(ActionType.CANCEL);
-		 commandPublisher.publish(orderFlowCommand);
+		 commandPublisher.asyncSend(orderFlowCommand);
 		 
 		 return true;
 	 }
@@ -133,9 +133,8 @@ public class OrderController {
 		 System.out.println("Inside cancelOrder"+order.getOrderId());
 		 OrderFlowCommand orderFlowCommand = new OrderFlowCommand();
 		 orderFlowCommand.setBody(order);
-		 orderFlowCommand.setActiontype(ActionType.CANCELWORKINGORDER);
-		 commandPublisher.publish(orderFlowCommand);
-		 
+		 orderFlowCommand.setActiontype(ActionType.CANCEL);
+		 commandPublisher.asyncSend(orderFlowCommand);
 		 return true;
 	 }
 	 
@@ -150,7 +149,7 @@ public class OrderController {
 		orderFlowCommand.setBody(order);
 		orderFlowCommand.setActiontype(ActionType.PROCESSFILL);
 		// orderFlowCommand.setSyncRequest(true);
-		commandPublisher.publish(orderFlowCommand);
+		commandPublisher.asyncSend(orderFlowCommand);
 		//workFlowService.processFillOrder(order,"");
 		return true;
 	}
