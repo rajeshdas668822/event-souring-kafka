@@ -18,14 +18,14 @@
 
         <route>
                 <from uri="jms:topic:commandHandler"/>
-                <log message="body============${body}"/>
+                <!--<log message="body============${body}"/>-->
                 <to uri="bean:activeMqCommandConsumer"/>
         </route>
 
 
             <route>
                 <from uri="jms:queue:commandHandler"/>
-                <log message="body============${body}"/>
+                <!--<log message="body============${body}"/>-->
                 <to uri="bean:activeMqCommandConsumer"/>
             </route>
   </camelContext>

@@ -30,6 +30,35 @@
         </encoder>
     </appender>
 
+
+<!--
+    <logger name="org.activiti.engine" level="debug" additivity="false">
+        <appender-ref ref="STDOUT" />
+        <appender-ref ref="file" />
+    </logger>
+-->
+
+
+    <appender name="file" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>logs/oneview.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>logs/test.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>2</maxHistory>
+        </rollingPolicy>
+
+        <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
+            <layout class="ch.qos.logback.classic.PatternLayout">
+                <Pattern>%date{yyyy-MM-dd HH:mm:ss.SSS} [%thread] [%mdc] %-5level %logger{36}.%M:%L - %msg%n</Pattern>
+            </layout>
+        </encoder>
+    </appender>
+
+    <logger name="org.activiti.engine" level="info" additivity="false">
+        <appender-ref ref="STDOUT" />
+        <appender-ref ref="file" />
+    </logger>
+
+
     <root level="info">
         <appender-ref ref="STDOUT"/>
     </root>

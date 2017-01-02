@@ -26,13 +26,25 @@
 		</property>
 	</bean>
 
+<!--
 	<bean id="dataSource"
-		class="org.springframework.jdbc.datasource.TransactionAwareDataSourceProxy">
+		  class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="org.h2.Driver" />
+		<property name="url"
+				  value="jdbc:h2:mem:appEngine;DB_CLOSE_DELAY=1000" />
+		<property name="username" value="sa" />
+		<property name="password" value="" />
+	</bean>
+-->
+
+
+	<bean id="dataSource"
+		  class="org.springframework.jdbc.datasource.TransactionAwareDataSourceProxy">
 		<property name="targetDataSource">
 			<bean class="org.springframework.jdbc.datasource.SimpleDriverDataSource">
 				<property name="driverClass" value="org.h2.Driver" />
-				<!-- <property name="url" value="jdbc:h2:mem:activiti;DB_CLOSE_DELAY=1000" />-->
-				<property name="url" value="jdbc:h2:tcp://localhost/~/test" />
+				<property name="url" value="jdbc:h2:mem:appEngine;DB_CLOSE_DELAY=1000" />
+				<!--<property name="url" value="jdbc:h2:tcp://localhost/~/activiti" />-->
 				<property name="username" value="sa" />
 				<property name="password" value="" />
 			</bean>
@@ -53,9 +65,9 @@
 		</property>
 		<property name="jpaProperties">
 			<props>
-				<prop key="hibernate.hbm2ddl.auto">validate</prop>
+				<prop key="hibernate.hbm2ddl.auto">create-drop</prop>
 				<prop key="hibernate.dialect">org.hibernate.dialect.H2Dialect</prop>
-				<prop key="hibernate.show_sql">false</prop>
+				<prop key="hibernate.show_sql">true</prop>
 				<prop key="hibernate.format_sql">true</prop>				
 				<prop key="hibernate.order_inserts">true</prop>
 				<prop key="hibernate.order_updates">true</prop>

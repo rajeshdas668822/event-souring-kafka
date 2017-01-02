@@ -20,7 +20,7 @@
         <activiti:formProperty id="limitAmount" name="Limitn Amount(Setting)" default="20000"></activiti:formProperty>
       </extensionElements>
     </startEvent>
-    <userTask id="orderInit" name="Initial" activiti:assignee="rajesh" activiti:candidateGroups="sales">
+    <userTask id="orderInit" name="Initial" activiti:candidateGroups="maker">
       <extensionElements>
         <activiti:formProperty id="orderId" name="Order ID" expression="${order.orderId}" writable="false" required="true"></activiti:formProperty>
         <activiti:formProperty id="productType" name="Product Type" expression="${order.productType}" writable="false" required="true"></activiti:formProperty>
@@ -37,8 +37,8 @@
         </activiti:formProperty>
       </extensionElements>
     </userTask>
-    <userTask id="usertask1" name="Pending" activiti:assignee="kermit" activiti:candidateGroups="sales"></userTask>
-    <userTask id="usertask2" name="Working" activiti:assignee="kermit">
+    <userTask id="orderPending" name="Pending" activiti:candidateGroups="Sales"></userTask>
+    <userTask id="workingOrder" name="Working" activiti:candidateGroups="checker">
       <extensionElements>
         <activiti:formProperty id="orderId" name="Order ID" expression="${order.orderId}" writable="false" required="true"></activiti:formProperty>
         <activiti:formProperty id="productType" name="Product Type" expression="${order.productType}" writable="false" required="true"></activiti:formProperty>
@@ -55,7 +55,7 @@
         <activiti:formProperty id="actionType" name="Action Performed:" expression="${actionType}"></activiti:formProperty>
       </extensionElements>
     </userTask>
-    <userTask id="usertask3" name="Pending Cancel" activiti:assignee="fozzie">
+    <userTask id="PendingCancel" name="Pending Cancel" activiti:candidateGroups="checker">
       <extensionElements>
         <activiti:formProperty id="productType" name="Product Type" type="enum" required="true">
           <activiti:value id="FxSwap" name="FX Swap"></activiti:value>
@@ -79,11 +79,11 @@
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${isAutoRelease == false}]]></conditionExpression>
     </sequenceFlow>
     <exclusiveGateway id="exclusivegateway2" name="Exclusive Gateway"></exclusiveGateway>
-    <sequenceFlow id="flow13" sourceRef="usertask1" targetRef="exclusivegateway2"></sequenceFlow>
-    <sequenceFlow id="flow14" name="Accept/Ack" sourceRef="exclusivegateway2" targetRef="usertask2">
+    <sequenceFlow id="flow13" sourceRef="orderPending" targetRef="exclusivegateway2"></sequenceFlow>
+    <sequenceFlow id="flow14" name="Accept/Ack" sourceRef="exclusivegateway2" targetRef="workingOrder">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${actionType == "Accept"}]]></conditionExpression>
     </sequenceFlow>
-    <sequenceFlow id="flow15" name="Request Cancel" sourceRef="exclusivegateway2" targetRef="usertask3">
+    <sequenceFlow id="flow15" name="Request Cancel" sourceRef="exclusivegateway2" targetRef="PendingCancel">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${actionType == "Cancel"}]]></conditionExpression>
     </sequenceFlow>
     <endEvent id="endevent1" name="End"></endEvent>
@@ -91,7 +91,7 @@
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${actionType == "Reject"}]]></conditionExpression>
     </sequenceFlow>
     <exclusiveGateway id="exclusivegateway3" name="Exclusive Gateway"></exclusiveGateway>
-    <userTask id="usertask4" name="Partially Filled" activiti:assignee="fozzie">
+    <userTask id="PartiallyFilled" name="Partially Filled" activiti:candidateGroups="marketing">
       <extensionElements>
         <activiti:formProperty id="orderId" name="Order ID" expression="${order.orderId}" writable="false" required="true"></activiti:formProperty>
         <activiti:formProperty id="productType" name="Product Type" expression="${order.productType}" writable="false" required="true"></activiti:formProperty>
@@ -108,10 +108,10 @@
         <activiti:formProperty id="actionType" name="Action Performed:" expression="${actionType}"></activiti:formProperty>
       </extensionElements>
     </userTask>
-    <sequenceFlow id="flow19" name="Partial Fill" sourceRef="exclusivegateway3" targetRef="usertask4">
+    <sequenceFlow id="flow19" name="Partial Fill" sourceRef="exclusivegateway3" targetRef="PartiallyFilled">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${workingOrderAction =="Partial Fill" }]]></conditionExpression>
     </sequenceFlow>
-    <userTask id="usertask5" name="Filled" activiti:assignee="kermit">
+    <userTask id="FilledOrder" name="Filled" activiti:candidateGroups="checker">
       <extensionElements>
         <activiti:formProperty id="orderId" name="Order ID" expression="${order.orderId}" writable="false" required="true"></activiti:formProperty>
         <activiti:formProperty id="productType" name="Product Type" expression="${order.productType}" writable="false" required="true"></activiti:formProperty>
@@ -125,41 +125,41 @@
         <activiti:formProperty id="actionType" name="Action Performed:" expression="${actionType}" writable="false"></activiti:formProperty>
       </extensionElements>
     </userTask>
-    <sequenceFlow id="flow20" name="Fill" sourceRef="exclusivegateway3" targetRef="usertask5">
+    <sequenceFlow id="flow20" name="Fill" sourceRef="exclusivegateway3" targetRef="FilledOrder">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${workingOrderAction =="Fill" }]]></conditionExpression>
     </sequenceFlow>
-    <sequenceFlow id="flow22" name="Unfill" sourceRef="usertask5" targetRef="usertask2"></sequenceFlow>
-    <sequenceFlow id="flow25" name="Place Order" sourceRef="orderInit" targetRef="usertask1"></sequenceFlow>
+    <sequenceFlow id="flow22" name="Unfill" sourceRef="FilledOrder" targetRef="workingOrder"></sequenceFlow>
+    <sequenceFlow id="flow25" name="Place Order" sourceRef="orderInit" targetRef="orderPending"></sequenceFlow>
     <exclusiveGateway id="exclusivegateway4" name="Exclusive Gateway"></exclusiveGateway>
-    <sequenceFlow id="flow26" name="Reject Cancel" sourceRef="usertask3" targetRef="exclusivegateway4"></sequenceFlow>
-    <sequenceFlow id="flow27" name="to Pending" sourceRef="exclusivegateway4" targetRef="usertask1">
+    <sequenceFlow id="flow26" name="Reject Cancel" sourceRef="PendingCancel" targetRef="exclusivegateway4"></sequenceFlow>
+    <sequenceFlow id="flow27" name="to Pending" sourceRef="exclusivegateway4" targetRef="orderPending">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${previousAction == "Pending" && pendingCancelAction == "Reject"}]]></conditionExpression>
     </sequenceFlow>
-    <sequenceFlow id="flow28" name="to Working Order" sourceRef="exclusivegateway4" targetRef="usertask2">
+    <sequenceFlow id="flow28" name="to Working Order" sourceRef="exclusivegateway4" targetRef="workingOrder">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${previousAction == "Working Order"}]]></conditionExpression>
     </sequenceFlow>
     <sequenceFlow id="flow34" name="Cancel Accepted" sourceRef="exclusivegateway4" targetRef="orderInit">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${previousAction == "Cancel Accepted"  && pendingCancelAction == "Accept"}]]></conditionExpression>
     </sequenceFlow>
-    <sequenceFlow id="flow35" name="to Partially Filled" sourceRef="exclusivegateway4" targetRef="usertask4">
+    <sequenceFlow id="flow35" name="to Partially Filled" sourceRef="exclusivegateway4" targetRef="PartiallyFilled">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${previousAction == "Partially Filled"}]]></conditionExpression>
     </sequenceFlow>
-    <serviceTask id="servicetask2" name="create Order" activiti:expression="#{orderCreation.execute(execution)}"></serviceTask>
-    <sequenceFlow id="flow40" sourceRef="startevent1" targetRef="servicetask2"></sequenceFlow>
-    <sequenceFlow id="flow43" name="to Pending Cancel" sourceRef="exclusivegateway3" targetRef="usertask3">
+    <serviceTask id="createOrder" name="create Order" activiti:expression="#{orderCreation.execute(execution)}"></serviceTask>
+    <sequenceFlow id="flow40" sourceRef="startevent1" targetRef="createOrder"></sequenceFlow>
+    <sequenceFlow id="flow43" name="to Pending Cancel" sourceRef="exclusivegateway3" targetRef="PendingCancel">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${workingOrderAction =="Cancel"}]]></conditionExpression>
     </sequenceFlow>
     <serviceTask id="validateAutoRelease" name="Auto Release?" activiti:expression="#{autoRelease.validateAutoRelease(execution)}"></serviceTask>
     <sequenceFlow id="flow44" sourceRef="validateAutoRelease" targetRef="exclusivegateway1"></sequenceFlow>
-    <sequenceFlow id="flow45" sourceRef="servicetask2" targetRef="validateAutoRelease"></sequenceFlow>
-    <serviceTask id="servicetask4" name="Mail to CounterParty" activiti:expression="#{mailSender.sendMail(execution)}"></serviceTask>
-    <sequenceFlow id="flow47" name="Auto Release" sourceRef="exclusivegateway1" targetRef="servicetask4">
+    <sequenceFlow id="flow45" sourceRef="createOrder" targetRef="validateAutoRelease"></sequenceFlow>
+    <serviceTask id="mailtoCounterParty" name="Mail to CounterParty" activiti:expression="#{mailSender.sendMail(execution)}"></serviceTask>
+    <sequenceFlow id="flow47" name="Auto Release" sourceRef="exclusivegateway1" targetRef="mailtoCounterParty">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${isAutoRelease == true}]]></conditionExpression>
     </sequenceFlow>
-    <sequenceFlow id="flow48" name="to Pending" sourceRef="servicetask4" targetRef="usertask1"></sequenceFlow>
-    <serviceTask id="servicetask5" name="check Fill Order" activiti:expression="#{fillOrderValidator.validateFillOrder(execution)}"></serviceTask>
-    <sequenceFlow id="flow49" sourceRef="usertask2" targetRef="servicetask5"></sequenceFlow>
-    <sequenceFlow id="flow50" sourceRef="servicetask5" targetRef="exclusivegateway3"></sequenceFlow>
+    <sequenceFlow id="flow48" name="to Pending" sourceRef="mailtoCounterParty" targetRef="orderPending"></sequenceFlow>
+    <serviceTask id="validateFillOrder" name="check Fill Order" activiti:expression="#{fillOrderValidator.validateFillOrder(execution)}"></serviceTask>
+    <sequenceFlow id="flow49" sourceRef="workingOrder" targetRef="validateFillOrder"></sequenceFlow>
+    <sequenceFlow id="flow50" sourceRef="validateFillOrder" targetRef="exclusivegateway3"></sequenceFlow>
   </process>
   <process id="process_pool1" name="process_pool1" isExecutable="true">
     <laneSet id="laneSet_process_pool1">
@@ -176,13 +176,13 @@
       <bpmndi:BPMNShape bpmnElement="orderInit" id="BPMNShape_orderInit">
         <omgdc:Bounds height="85.0" width="105.0" x="579.0" y="134.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="usertask1" id="BPMNShape_usertask1">
+      <bpmndi:BPMNShape bpmnElement="orderPending" id="BPMNShape_orderPending">
         <omgdc:Bounds height="55.0" width="105.0" x="579.0" y="394.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="usertask2" id="BPMNShape_usertask2">
+      <bpmndi:BPMNShape bpmnElement="workingOrder" id="BPMNShape_workingOrder">
         <omgdc:Bounds height="55.0" width="105.0" x="1020.0" y="920.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="usertask3" id="BPMNShape_usertask3">
+      <bpmndi:BPMNShape bpmnElement="PendingCancel" id="BPMNShape_PendingCancel">
         <omgdc:Bounds height="55.0" width="105.0" x="1218.0" y="568.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="exclusivegateway1" id="BPMNShape_exclusivegateway1">
@@ -197,25 +197,25 @@
       <bpmndi:BPMNShape bpmnElement="exclusivegateway3" id="BPMNShape_exclusivegateway3">
         <omgdc:Bounds height="40.0" width="40.0" x="708.0" y="1092.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="usertask4" id="BPMNShape_usertask4">
+      <bpmndi:BPMNShape bpmnElement="PartiallyFilled" id="BPMNShape_PartiallyFilled">
         <omgdc:Bounds height="55.0" width="105.0" x="1469.0" y="920.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="usertask5" id="BPMNShape_usertask5">
+      <bpmndi:BPMNShape bpmnElement="FilledOrder" id="BPMNShape_FilledOrder">
         <omgdc:Bounds height="55.0" width="105.0" x="676.0" y="920.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="exclusivegateway4" id="BPMNShape_exclusivegateway4">
         <omgdc:Bounds height="40.0" width="40.0" x="860.0" y="214.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="servicetask2" id="BPMNShape_servicetask2">
+      <bpmndi:BPMNShape bpmnElement="createOrder" id="BPMNShape_createOrder">
         <omgdc:Bounds height="55.0" width="105.0" x="30.0" y="358.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="validateAutoRelease" id="BPMNShape_validateAutoRelease">
         <omgdc:Bounds height="55.0" width="105.0" x="30.0" y="207.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="servicetask4" id="BPMNShape_servicetask4">
+      <bpmndi:BPMNShape bpmnElement="mailtoCounterParty" id="BPMNShape_mailtoCounterParty">
         <omgdc:Bounds height="72.0" width="105.0" x="338.0" y="386.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="servicetask5" id="BPMNShape_servicetask5">
+      <bpmndi:BPMNShape bpmnElement="validateFillOrder" id="BPMNShape_validateFillOrder">
         <omgdc:Bounds height="55.0" width="105.0" x="852.0" y="1000.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge bpmnElement="flow11" id="BPMNEdge_flow11">

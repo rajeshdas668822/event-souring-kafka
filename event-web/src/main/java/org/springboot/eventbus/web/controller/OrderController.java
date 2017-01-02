@@ -76,6 +76,10 @@ public class OrderController {
 			 orderList = workFlowService.loadTask(user.getUserId());
 		 }
 
+		 if(orderList == null)
+		 	return null;
+
+
 		 Map<String,List<Order>> orderMap = orderList.parallelStream().collect(Collectors.groupingBy(Order::getStatus));
 		 System.out.println(orderMap);
 		 return  orderMap;

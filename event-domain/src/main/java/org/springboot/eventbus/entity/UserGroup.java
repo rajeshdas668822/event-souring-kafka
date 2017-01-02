@@ -1,5 +1,7 @@
 package org.springboot.eventbus.entity;
 
+import lombok.ToString;
+
 import javax.persistence.*;
 import java.util.Set;
 
@@ -10,11 +12,18 @@ import java.util.Set;
 
 @Entity
 @Table(name = "T_GROUP")
-@NamedQuery(name="group.findGroupByName",  query="SELECT c FROM UserGroup c  join  c.userProfiles  user WHERE user.loginName = :name")
+//@NamedQuery(name="group.findGroupByName",  query="SELECT c FROM UserGroup c  join  c.userProfiles  user WHERE user.loginName = :name")
+
+@NamedQueries( { @NamedQuery(name="group.findAll",   query="SELECT c FROM UserGroup c"),
+        @NamedQuery(name="group.findGroupByName",  query="SELECT c FROM UserGroup c  join  c.userProfiles  user WHERE user.loginName = :name")
+
+})
+@ToString
 public class UserGroup {
 
     @Id  
     @Column(name = "ID",unique = true, nullable = false)
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private String groupId;
 
 

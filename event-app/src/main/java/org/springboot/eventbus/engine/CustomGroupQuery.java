@@ -31,7 +31,7 @@ public class CustomGroupQuery implements GroupQuery {
 		super();
 	}
 
-	
+
 	 public GroupDao getGroupDao() {
 		return groupDao;
 	}
@@ -59,13 +59,13 @@ public class CustomGroupQuery implements GroupQuery {
 
 
 
-	  
+
 	  public CustomGroupQuery (CustomGroup customGroup){
-		  this.customGroup = customGroup;		  
+		  this.customGroup = customGroup;
 	  }
-	  
-	
-	 
+
+
+
 
 	@Override
 	public GroupQuery asc() {
@@ -86,7 +86,7 @@ public class CustomGroupQuery implements GroupQuery {
 	}
 
 	@Override
-	public Group singleResult() {		
+	public Group singleResult() {
 		return customGroup;
 	}
 
@@ -96,21 +96,22 @@ public class CustomGroupQuery implements GroupQuery {
 		List<UserGroup> userGroups = groupDao.listAll(this);
 		/*List<CustomGroup> customGroups = new ArrayList<>();
 		return userGroups.stream().map(userGrp ->{
-			List<UserGroupMapping> groupMapping = userGrp.getUserGroupMappings();			
+			List<UserGroupMapping> groupMapping = userGrp.getUserGroupMappings();
 			groupMapping.forEach(userGrpMapping -> {
 				if(userGrpMapping.getUser().getLoginName().equals(userId)){
 					customGroups.add(new CustomGroup(userGrp.getGroupId(),userGrp.getType()));
-				}			   
+				}
 			});
 			return customGroups;
 		}).flatMap(p ->p.stream()).collect(Collectors.toList());
 		*/
-		
+
 		return userGroups.stream().map(userGrp -> {
-		 return new CustomGroup(userGrp.getGroupId(),userGrp.getType()) ;
+		 return new CustomGroup(userGrp.getName()
+				 ,userGrp.getType()) ;
 		}).collect(Collectors.toList());
-		
-		
+
+
 	}
 
 	@Override
@@ -122,8 +123,8 @@ public class CustomGroupQuery implements GroupQuery {
 	@Override
 	public GroupQuery groupId(String groupId) {
 		UserGroup userGrp = groupDao.findByGroupId(groupId);
-		CustomGroup cutomUserGrp = new CustomGroup(userGrp.getGroupId(), userGrp.getType());		
-		return new CustomGroupQuery(cutomUserGrp);
+		CustomGroup customUserGrp = new CustomGroup(userGrp.getName(), userGrp.getType());
+		return new CustomGroupQuery(customUserGrp);
 	}
 
 	@Override
@@ -135,15 +136,15 @@ public class CustomGroupQuery implements GroupQuery {
 	@Override
 	public GroupQuery groupNameLike(String groupNameLike) {
 		UserGroup userGrp = groupDao.findByGroupNameLike(groupNameLike);
-		CustomGroup cutomUserGrp = new CustomGroup(userGrp.getGroupId(), userGrp.getType());		
-		return new CustomGroupQuery(cutomUserGrp);
+		CustomGroup customUserGrp = new CustomGroup(userGrp.getName(), userGrp.getType());
+		return new CustomGroupQuery(customUserGrp);
 	}
 
 	@Override
 	public GroupQuery groupType(String groupType) {
 		UserGroup userGrp = groupDao.findByGroupType(groupType);
-		CustomGroup cutomUserGrp = new CustomGroup(userGrp.getGroupId(), userGrp.getType());		
-		return new CustomGroupQuery(cutomUserGrp);
+		CustomGroup customUserGrp = new CustomGroup(userGrp.getName(), userGrp.getType());
+		return new CustomGroupQuery(customUserGrp);
 	}
 
 	@Override
@@ -175,7 +176,7 @@ public class CustomGroupQuery implements GroupQuery {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
+
 	  
 
 	

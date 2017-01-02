@@ -24,13 +24,13 @@
 
 
 	<bean id="processEngineConfiguration" class="org.activiti.spring.SpringProcessEngineConfiguration">
-		<property name="databaseType" value="h2" />
+		<!--<property name="databaseType" value="h2" />-->
 		<property name="dataSource" ref="dataSource" />
 		<property name="transactionManager" ref="transactionManager" />
 		<property name="databaseSchemaUpdate" value="true" />
-		<property name="jpaEntityManagerFactory" ref="entityManagerFactory" />
+	    <property name="jpaEntityManagerFactory" ref="entityManagerFactory" />
 		<property name="jobExecutorActivate" value="true" />
-		<property name="history" value="full" />
+		<property name="history" value="audit" />
 		<property name="mailServerPort" value="25"/>
 		<property name="createDiagramOnDeploy" value="false" />
 		<property name="deploymentResources" value="classpath*:/diagram/orderworkflow/*.bpmn" /> 
@@ -47,9 +47,20 @@
 				</list>
 	     </property> 
 	</bean>
-	
-	
 
+
+	<!--<bean id="activitiDataSource"
+		  class="org.springframework.jdbc.datasource.TransactionAwareDataSourceProxy">
+		<property name="targetDataSource">
+			<bean class="org.springframework.jdbc.datasource.SimpleDriverDataSource">
+				<property name="driverClass" value="org.h2.Driver" />
+				<property name="url" value="jdbc:h2:mem:activiti;DB_CLOSE_DELAY=1000" />
+				&lt;!&ndash;<property name="url" value="jdbc:h2:tcp://localhost/~/test" />&ndash;&gt;
+				<property name="username" value="sa" />
+				<property name="password" value="" />
+			</bean>
+		</property>
+	</bean>-->
 	
 
 	<bean id="processEngine" class="org.activiti.spring.ProcessEngineFactoryBean">

@@ -46,9 +46,15 @@ public class UserDaoImpl implements UserDao{
 	@Override
 	@Transactional(readOnly=true)
 	public List<UserGroup> findGroupsByUser(String userId) {
-		UserProfile userProfile = entityManager.createNamedQuery("findGroupByName", UserProfile.class)
-				.setParameter("name", userId).getSingleResult();		
-		Set<UserGroup> userGroups = userProfile.getUserGroups();
+		UserProfile userprofile = null;
+		List<UserProfile> userprofiles = entityManager.createNamedQuery("user.findByName", UserProfile.class)
+				.setParameter("name", userId).getResultList();
+		if(userprofiles!=null && userprofiles.size()>0) {
+			userprofile = (UserProfile) userprofiles.get(0);
+		}
+		if(userprofile == null)
+			return null;
+		Set<UserGroup> userGroups = userprofile.getUserGroups();
 		return new ArrayList<>(userGroups);
 	}
 
@@ -61,8 +67,8 @@ public class UserDaoImpl implements UserDao{
 		Root o = q.from(UserProfile.class);
 		q.select(o);
 		q.where(cb.equal(o.get("firstName"), firstName));
-		UserProfile userPofile = (UserProfile)this.entityManager.createQuery(q).getSingleResult();		
-		return userPofile;
+		UserProfile userProfile = (UserProfile)this.entityManager.createQuery(q).getSingleResult();
+		return userProfile;
 		
 	}
 
@@ -74,8 +80,8 @@ public class UserDaoImpl implements UserDao{
 		Root o = q.from(UserProfile.class);
 		q.select(o);
 		q.where(cb.like(o.get("firstName"), firstNameLike));
-		UserProfile userPofile = (UserProfile)this.entityManager.createQuery(q).getSingleResult();		
-		return userPofile;
+		UserProfile userProfile = (UserProfile)this.entityManager.createQuery(q).getSingleResult();
+		return userProfile;
 	}
 
 	@Override
@@ -86,8 +92,8 @@ public class UserDaoImpl implements UserDao{
 		Root o = q.from(UserProfile.class);
 		q.select(o);
 		q.where(cb.like(o.get("lastName"), lastName));
-		UserProfile userPofile = (UserProfile)this.entityManager.createQuery(q).getSingleResult();		
-		return userPofile;
+		UserProfile userProfile = (UserProfile)this.entityManager.createQuery(q).getSingleResult();
+		return userProfile;
 	}
 
 	@Override
@@ -97,8 +103,8 @@ public class UserDaoImpl implements UserDao{
 		Root o = q.from(UserProfile.class);
 		q.select(o);
 		q.where(cb.like(o.get("lastName"), lastNameLike));
-		UserProfile userPofile = (UserProfile)this.entityManager.createQuery(q).getSingleResult();		
-		return userPofile;
+		UserProfile userProfile = (UserProfile)this.entityManager.createQuery(q).getSingleResult();
+		return userProfile;
 	}
 
 	@Override
@@ -114,8 +120,8 @@ public class UserDaoImpl implements UserDao{
 		Root o = q.from(UserProfile.class);
 		q.select(o);
 		q.where(cb.like(o.get("emailAddress"), email));
-		UserProfile userPofile = (UserProfile)this.entityManager.createQuery(q).getSingleResult();		
-		return userPofile;
+		UserProfile userProfile = (UserProfile)this.entityManager.createQuery(q).getSingleResult();
+		return userProfile;
 	}
 
 	@Override

@@ -1,6 +1,9 @@
 package org.springboot.eventbus.entity;
 
+import lombok.ToString;
+
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -17,13 +20,14 @@ import java.util.Set;
 @NamedQuery(name="findGroupByName",  query="SELECT c FROM UserProfile c  join  c.userGroups  user WHERE c.loginName = :name")
 }     
 )
-
-
-
 public class UserProfile {
 
     @Id
     @Column(name = "ID", unique = true, nullable = false)
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    private String userId;
+
+    @Column(name = "login_name")
     private String loginName;
 
     @Column(name = "REV")
@@ -42,10 +46,10 @@ public class UserProfile {
     private String password;
     
     
-    @ManyToMany(cascade = CascadeType.ALL,fetch=FetchType.LAZY)
+    @ManyToMany(cascade = CascadeType.ALL,fetch=FetchType.EAGER)
     @JoinTable(name = "T_MEMBERSHIP", joinColumns = @JoinColumn(name = "USER_ID", referencedColumnName = "ID" ), 
     inverseJoinColumns = @JoinColumn(name = "GROUP_ID", referencedColumnName = "ID"))
-    private Set<UserGroup> userGroups;
+    private Set<UserGroup> userGroups = new HashSet<>();
     
     
 
@@ -106,5 +110,11 @@ public class UserProfile {
     }
 
 
-   
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
 }

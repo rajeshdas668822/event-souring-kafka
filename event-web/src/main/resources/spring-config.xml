@@ -21,52 +21,6 @@
 		</property>
 	</bean>
 
-	<!--<bean id="dataSource"
-		class="org.springframework.jdbc.datasource.TransactionAwareDataSourceProxy">
-		<property name="targetDataSource">
-			<bean class="org.springframework.jdbc.datasource.SimpleDriverDataSource">
-				<property name="driverClass" value="org.h2.Driver" />
-				&lt;!&ndash; <property name="url" value="jdbc:h2:mem:activiti;DB_CLOSE_DELAY=1000" /> &ndash;&gt;
-				<property name="url" value="jdbc:h2:tcp://localhost/~/test" />
-				
-				<property name="username" value="sa" />
-				<property name="password" value="" />
-			</bean>
-		</property>
-	</bean>
-
-	<bean id="transactionManager"
-		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
-		<property name="dataSource" ref="dataSource" />
-	</bean>	
-
-	<bean id="entityManagerFactory"
-		class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
-		<property name="dataSource" ref="dataSource" />
-		<property name="packagesToScan" value="org.springboot.angular.demo.usermanagment.entity" />
-		<property name="jpaVendorAdapter">
-			<bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter" />
-		</property>
-		<property name="jpaProperties">
-			<props>
-				<prop key="hibernate.hbm2ddl.auto">validate</prop>
-				<prop key="hibernate.dialect">org.hibernate.dialect.H2Dialect</prop>
-				<prop key="hibernate.show_sql">true</prop>
-				<prop key="hibernate.format_sql">true</prop>				
-				<prop key="hibernate.order_inserts">true</prop>
-				<prop key="hibernate.order_updates">true</prop>
-				<prop key="hibernate.jdbc.batch_size">20</prop>
-				<prop key="hibernate.cache.use_second_level_cache">false</prop>
-				<prop key="hibernate.cache.use_query_cache">false</prop>
-				<prop key="hibernate.cache.use_minimal_puts">true</prop>				
-				<prop key="hibernate.generate_statistics">false</prop>
-				<prop key="hibernate.cache.use_structured_entries">true</prop>
-				<prop key="javax.persistence.sharedCache.mode">ENABLE_SELECTIVE</prop>				
-				<prop key="hibernate.cache.hazelcast.shutdown_on_session_factory_close">true</prop>				
-			</props>
-		</property>
-	</bean>	
-   -->
    <import resource="classpath*:camel-client-message.xml"/>
 
 </beans>
