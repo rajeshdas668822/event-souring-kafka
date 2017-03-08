@@ -1,4 +1,4 @@
-package org.springboot.eventbus.helper;
+package org.springboot.eventbus.builder;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

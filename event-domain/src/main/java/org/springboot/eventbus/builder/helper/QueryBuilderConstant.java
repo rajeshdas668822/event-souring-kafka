@@ -1,4 +1,4 @@
-package org.springboot.eventbus.helper;
+package org.springboot.eventbus.builder.helper;
 
 import org.apache.commons.lang3.StringUtils;
 

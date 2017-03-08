@@ -9,16 +9,91 @@
          http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
          http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd
          http://activemq.apache.org/schema/core http://activemq.apache.org/schema/core/activemq-core.xsd">
-	         
-			     
-		<!-- Camel JMSProducer to be able to send messages to a remote Active MQ server -->
-		<bean id="jms" class="org.apache.camel.component.jms.JmsComponent">
-		  <property name="connectionFactory">
-		    <bean class="org.apache.activemq.ActiveMQConnectionFactory">
-		      <property name="brokerURL" value="tcp://localhost:61616"/>
-		       <property name="trustAllPackages" value="true"/>
-		    </bean>
-		  </property>
-		</bean>
+
+
+	<broker:broker useJmx="false" persistent="false" brokerName="localhost" populateJMSXUserID="false">
+
+		<broker:destinationPolicy>
+			<broker:policyMap>
+				<broker:policyEntries>
+					<broker:policyEntry topic=">" >
+						<!-- The constantPendingMessageLimitStrategy is used to prevent
+                             slow topic consumers to block producers and affect other consumers
+                             by limiting the number of messages that are retained
+                             For more information, see:
+
+                             http://activemq.apache.org/slow-consumer-handling.html
+
+                        -->
+						<broker:pendingMessageLimitStrategy>
+							<broker:constantPendingMessageLimitStrategy limit="1000"/>
+						</broker:pendingMessageLimitStrategy>
+					</broker:policyEntry>
+				</broker:policyEntries>
+			</broker:policyMap>
+		</broker:destinationPolicy>
+
+
+		<!--
+            The managementContext is used to configure how ActiveMQ is exposed in
+            JMX. By default, ActiveMQ uses the MBean server that is started by
+            the JVM. For more information, see:
+
+            http://activemq.apache.org/jmx.html
+        -->
+		<broker:managementContext>
+			<broker:managementContext createConnector="false"/>
+		</broker:managementContext>
+
+		<!--
+            Configure message persistence for the broker. The default persistence
+            mechanism is the KahaDB store (identified by the kahaDB tag).
+            For more information, see:
+
+            http://activemq.apache.org/persistence.html
+        -->
+		<!--<broker:persistenceAdapter>
+			<kahaDB directory="${activemq.data}/kahadb"/>
+		</broker:persistenceAdapter>
+-->
+
+		<!--
+          The systemUsage controls the maximum amount of space the broker will
+          use before disabling caching and/or slowing down producers. For more information, see:
+          http://activemq.apache.org/producer-flow-control.html
+        -->
+	<!--	<broker:systemUsage>
+			<broker:systemUsage>
+				<memoryUsage>
+					<memoryUsage percentOfJvmHeap="70" />
+				</memoryUsage>
+				<broker:storeUsage>
+					<storeUsage limit="100 gb"/>
+				</broker:storeUsage>
+				<broker:tempUsage>
+					<tempUsage limit="50 gb"/>
+				</broker:tempUsage>
+			</broker:systemUsage>
+		</broker:systemUsage>
+-->
+		<!--
+            The transport connectors expose ActiveMQ over a given protocol to
+            clients and other brokers. For more information, see:
+
+            http://activemq.apache.org/configuring-transports.html
+        -->
+		<broker:transportConnectors>
+			<!-- DOS protection, limit concurrent connections to 1000 and frame size to 100MB -->
+			<broker:transportConnector name="openwire" uri="tcp://0.0.0.0:61617?maximumConnections=1000&amp;wireFormat.maxFrameSize=104857600"/>
+			<!--<broker:transportConnector name="amqp" uri="amqp://0.0.0.0:5672?maximumConnections=1000&amp;wireFormat.maxFrameSize=104857600"/>
+			<broker:transportConnector name="stomp" uri="stomp://0.0.0.0:61613?maximumConnections=1000&amp;wireFormat.maxFrameSize=104857600"/>
+			<broker:transportConnector name="mqtt" uri="mqtt://0.0.0.0:1883?maximumConnections=1000&amp;wireFormat.maxFrameSize=104857600"/>
+			<broker:transportConnector name="ws" uri="ws://0.0.0.0:61614?maximumConnections=1000&amp;wireFormat.maxFrameSize=104857600"/>-->
+		</broker:transportConnectors>
+
+
+	</broker:broker>
+
+
 		     
    </beans>

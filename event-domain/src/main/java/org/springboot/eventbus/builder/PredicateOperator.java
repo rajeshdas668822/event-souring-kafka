@@ -1,4 +1,6 @@
-package org.springboot.eventbus.helper;
+package org.springboot.eventbus.builder;
+import org.springboot.eventbus.builder.helper.CriteriaHelper;
+
 import javax.persistence.criteria.*;
 import java.util.Collection;
 public enum PredicateOperator {

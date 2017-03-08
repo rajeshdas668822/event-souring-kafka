@@ -1,4 +1,4 @@
-package org.springboot.eventbus.helper;
+package org.springboot.eventbus.builder.helper;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

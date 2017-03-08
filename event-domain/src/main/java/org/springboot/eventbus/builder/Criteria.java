@@ -1,4 +1,4 @@
-package org.springboot.eventbus.helper;
+package org.springboot.eventbus.builder;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -16,7 +16,7 @@ public class Criteria {
 
     private final List<Predicate> filters;
 
-
+    private final List<Order> orderBy;
 
     @JsonIgnore
     private final Map<Class, JoinType> joinTypes;
@@ -30,6 +30,7 @@ public class Criteria {
 
     public Criteria() {
         this.filters = new ArrayList<>();
+        this.orderBy = new ArrayList<>();
         this.joinTypes = new HashMap<>();
     }
 
@@ -82,7 +83,15 @@ public class Criteria {
         return this;
     }
 
+    public Criteria asc(String name) {
+        orderBy.add(new Order(name, true));
+        return this;
+    }
 
+    public Criteria desc(String name) {
+        orderBy.add(new Order(name, false));
+        return this;
+    }
 
     public Criteria join(Class clazz, JoinType type) {
         joinTypes.put(clazz, type);

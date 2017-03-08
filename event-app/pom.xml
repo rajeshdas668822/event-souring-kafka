@@ -64,6 +64,8 @@
 			<version>2.8.1</version>
 		</dependency>
 
+
+
 		<!-- Testing -->
 
 		<dependency>
@@ -98,11 +100,19 @@
 
 		<!-- Camel -->
 
-		<dependency>
+	   <dependency>
 			<groupId>org.apache.camel</groupId>
 			<artifactId>camel-stream</artifactId>
 			<version>2.15.1</version>
+			<scope>test</scope>
 		</dependency>
+
+		<dependency>
+			<groupId>org.apache.camel</groupId>
+			<artifactId>camel-testng</artifactId>
+			<version>2.15.1</version>
+			<scope>test</scope>
+		</dependency> 
 	</dependencies>
 
 	<build>

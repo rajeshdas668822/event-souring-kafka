@@ -6,8 +6,11 @@
        http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd">
 	
 	
-	<import resource="classpath*:jms-broker.xml"/>	         
-		<camelContext id="camel-server" xmlns="http://camel.apache.org/schema/spring">
+	<import resource="classpath*:jms-broker.xml"/>
+    <import resource="classpath*:jms-connector-config.xml"/>
+
+		<camelContext id="camel-server" xmlns="http://camel.apache.org/schema/spring" >
+            <jmxAgent id="agent" disabled="true"/>
   <template id="camelTemplate"/>
 
       <!--  <route>

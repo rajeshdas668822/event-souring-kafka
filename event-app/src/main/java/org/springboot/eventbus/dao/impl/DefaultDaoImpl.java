@@ -1,8 +1,8 @@
 package org.springboot.eventbus.dao.impl;
 
+import org.springboot.eventbus.builder.Criteria;
+import org.springboot.eventbus.builder.QueryBuilder;
 import org.springboot.eventbus.dao.DefaultDao;
-import org.springboot.eventbus.helper.Criteria;
-import org.springboot.eventbus.helper.QueryBuilder;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -92,4 +92,20 @@ public class DefaultDaoImpl  implements DefaultDao{
         }
      return  query.getResultList();
     }
+
+
+    @Override
+    public <T> List<T> getByCriteria(Class<T> type, Criteria criteria) {
+        if (criteria == null) {
+            return getAll(type);
+        }
+        return QueryBuilder.query(em, type, criteria);
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public <T> List<T> getAll(Class<T> type) {
+        return em.createQuery("Select t from " + type.getSimpleName() + " t").getResultList();
+    }
+
 }

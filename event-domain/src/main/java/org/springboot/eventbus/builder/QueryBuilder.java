@@ -1,4 +1,4 @@
-package org.springboot.eventbus.helper;
+package org.springboot.eventbus.builder;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
@@ -27,7 +27,14 @@ public class QueryBuilder {
             }
             q.where(p);
         }
-
+        if (!c.getOrderBy().isEmpty()) {
+            List<javax.persistence.criteria.Order> orderList = new ArrayList<>(q.getOrderList().size() + c.getOrderBy().size());
+            orderList.addAll(q.getOrderList());
+            for (Order o : c.getOrderBy()) {
+                orderList.add(o.build(b, q, c));
+            }
+            q.orderBy(orderList);
+        }
         return q;
     }
 
@@ -35,7 +42,7 @@ public class QueryBuilder {
         CriteriaQuery<Long> q = b.createQuery(Long.class);
         Root<T> root = q.from(clazz);
         q.select(b.count(root));
-        if (!c.getFilters().isEmpty()) {
+        if (c != null && !c.getFilters().isEmpty()) {
             q.where(Predicate.buildPredicates(b, q, c.getFilters(), c));
         }
         return q;

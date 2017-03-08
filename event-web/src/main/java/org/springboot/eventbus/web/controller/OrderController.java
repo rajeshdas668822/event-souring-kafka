@@ -20,13 +20,10 @@ import org.springboot.eventbus.util.RequestBlocker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 
-@Controller
+@RestController
 public class OrderController {
 
 
@@ -45,7 +42,6 @@ public class OrderController {
 	WorkflowService workFlowService;
 	
 	 @RequestMapping(value="/submitOrder",method = RequestMethod.POST)
-	 @ResponseBody
 	 public void submit(@RequestBody Order order){
 		 System.out.println("Hi");
 		 if(order!=null){
@@ -61,7 +57,6 @@ public class OrderController {
 	}
 	 
 	 @RequestMapping(value="/loadTask",method = RequestMethod.POST)
-	 @ResponseBody
 	 public Map<String, List<Order>> loadTaskUser(@RequestBody User user){
 
 		List<Order> orderList = null;
@@ -87,7 +82,6 @@ public class OrderController {
 	 
 	 
 	 @RequestMapping(value="/approveOrder",method = RequestMethod.POST)
-	 @ResponseBody
 	 public boolean approveOrder(@RequestBody Order order){
 		 System.out.println("Inside Approve"+order);
 		 OrderFlowCommand orderFlowCommand = new OrderFlowCommand();
@@ -101,7 +95,6 @@ public class OrderController {
 	 
 	 
 	 @RequestMapping(value="/rejectOrder",method = RequestMethod.POST)
-	 @ResponseBody
      public boolean rejectOrder(@RequestBody Order order){
 		 
 		 System.out.println("Inside Reject"+order.getOrderId());
@@ -117,7 +110,6 @@ public class OrderController {
     
     
 	 @RequestMapping(value="/cancelOrder",method = RequestMethod.POST)
-	 @ResponseBody
      public boolean cancelOrder(@RequestBody Order order){
 		 
 		 System.out.println("Inside cancelOrder"+order.getOrderId());
@@ -131,7 +123,6 @@ public class OrderController {
 	 
 	 
 	 @RequestMapping(value="/cancelWorkingOrder",method = RequestMethod.POST)
-	 @ResponseBody
      public boolean cancelWorkingOrder(@RequestBody Order order){
 
 		 System.out.println("Inside cancelOrder"+order.getOrderId());
@@ -145,7 +136,6 @@ public class OrderController {
 	 
 	 
 	@RequestMapping(value = "/fillOrder", method = RequestMethod.POST)
-	@ResponseBody
 	public boolean fillOrder(@RequestBody Order order) {
 		System.out.println("Inside fillOrder" + order.getFillAmount());
 
@@ -165,7 +155,6 @@ public class OrderController {
 	 
 	 
 	 @RequestMapping(value="/assignOrder",method = RequestMethod.POST)
-	 @ResponseBody
      public boolean assignOrder( @RequestBody RequestInfo requestInfo){		 
 	  System.out.println("Inside Assign"+requestInfo.getUser().getUserName());
 		 

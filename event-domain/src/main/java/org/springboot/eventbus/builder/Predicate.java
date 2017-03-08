@@ -1,4 +1,4 @@
-package org.springboot.eventbus.helper;
+package org.springboot.eventbus.builder;
 
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;

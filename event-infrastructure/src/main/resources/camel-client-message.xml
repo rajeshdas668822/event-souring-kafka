@@ -14,8 +14,9 @@
 		  <camel:template id="camelTemplate"/>
 		</camel:camelContext>
 		
-	   <import resource="classpath*:jms-broker.xml"/>
-		
+	<!--<import resource="classpath*:jms-broker.xml"/>
+-->
+	<import resource="classpath*:jms-connector-config.xml"/>
 	  <camel:proxy   id="workFlowService"   serviceInterface="org.springboot.eventbus.services.WorkflowService"      serviceUrl="jms:queue:workflow"/>
 		     
    </beans>

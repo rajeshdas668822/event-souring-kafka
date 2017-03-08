@@ -9,14 +9,12 @@ import java.util.Map;
 import javax.annotation.PostConstruct;
 
 import org.springboot.eventbus.domain.User;
+import org.springboot.eventbus.util.Response;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
-@Controller
+@RestController
 public class LoginController {
 	
 	public Map<String,User> existingUsers = new HashMap<String, User>();
@@ -54,7 +52,6 @@ public class LoginController {
 	}
 	
    @RequestMapping(value="/validateUser",method = RequestMethod.POST)
-   @ResponseBody
    public  boolean verifyUser(@RequestBody User user){
 		boolean validUser=false;
 		User storedUser = existingUsers.get(user.getUserId());
@@ -70,7 +67,6 @@ public class LoginController {
    
    
    @RequestMapping(value="/users",method = RequestMethod.GET)
-   @ResponseBody
    public  Collection<User> lodUser(){		
 	   return existingUsers.values();
 	 }
