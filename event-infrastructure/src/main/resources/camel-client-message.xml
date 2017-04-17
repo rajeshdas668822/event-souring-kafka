@@ -9,14 +9,98 @@
          http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
          http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd
          http://activemq.apache.org/schema/core http://activemq.apache.org/schema/core/activemq-core.xsd">
+
+	    <bean id="csvPredicate" class="org.springboot.eventbus.service.FileTypePredicate">
+			<constructor-arg value="csv"/>
+		</bean>
+
+		<bean id="xlsxPredicate" class="org.springboot.eventbus.service.FileTypePredicate">
+			<constructor-arg value="xlsx"/>
+		</bean>
+
+	<bean id="custbinder" class="org.springboot.eventbus.CustomBinder"/>
+
 	         
 		<camel:camelContext id="camel-client">
 		  <camel:template id="camelTemplate"/>
+
+
+
+
+
+			<!--<camel:rest >
+				<camel:post uri="/upload" >
+					<camel:to uri="direct:testing" />
+				</camel:post>
+				<camel:get uri="/test" >
+                     <camel:to uri="direct:getvalue"/>
+				</camel:get>
+
+			</camel:rest>-->
+<!--
+
+			<camel:route>
+				<camel:from uri="restlet:///upload?restletMethod=POST"/>
+				 <camel:to uri="direct:testing"/>
+			</camel:route>
+-->
+
+
+			<camel:route>
+				<camel:from uri="servlet:///upload?httpMethodRestrict=POST&amp;disableStreamCache=true&amp;servletName=camelServlet&amp;httpBindingRef=#custbinder"/>
+				<camel:to uri="direct:testing"/>
+			</camel:route>
+
+
+			<camel:route >
+				<camel:from uri="direct:testing"/>
+                 <camel:log message="All Headers----------------------${in.headers}"/>
+				<camel:choice>
+					<camel:when>
+						<camel:simple>${in.header.filetype} == 'json'</camel:simple>
+						<camel:log message="inside Json processor"/>
+					</camel:when>
+					<camel:when>
+						<camel:simple>${in.header.filetype} == 'xlsx'</camel:simple>
+						<camel:log message="inside xlsx processor"/>
+						<camel:to uri="bean:fileUploader"/>
+					</camel:when>
+					<camel:otherwise>
+						<camel:log message="inside CSV processor"/>
+					</camel:otherwise>
+				</camel:choice>
+
+
+				<!--<camel:to uri="bean:fileUploader"/>-->
+
+			</camel:route>
+
+			<camel:route>
+				<camel:from uri="direct:getvalue"/>
+				<camel:setBody>
+					<camel:simple> Hi How r u?</camel:simple>
+				</camel:setBody>
+			</camel:route>
+			<!--<camel:route>
+				<camel:from uri="restlet:/upload?restletMethods=POST"/>
+				<camel:log message="${body}"/>
+			</camel:route>
+
+			<camel:route>
+				<camel:from uri="restlet:/test?restletMethods=GET"/>
+				<camel:setBody>
+					<camel:simple> Hi How r u?</camel:simple>
+				</camel:setBody>
+			</camel:route>-->
+
 		</camel:camelContext>
 		
 	<!--<import resource="classpath*:jms-broker.xml"/>
 -->
 	<import resource="classpath*:jms-connector-config.xml"/>
 	  <camel:proxy   id="workFlowService"   serviceInterface="org.springboot.eventbus.services.WorkflowService"      serviceUrl="jms:queue:workflow"/>
+
+
 		     
    </beans>
+

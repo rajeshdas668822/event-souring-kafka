@@ -6,8 +6,34 @@
     <version>0.0.1-SNAPSHOT</version>
   </parent>
   <artifactId>event-web</artifactId>
-  
-  
+
+	<repositories>
+		<repository>
+			<id>numerix.releases</id>
+			<url>http://repo.spring.io/libs-release-remote/</url>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+		<!--<repository>
+			<id>numerix.snapshots</id>
+			<url>${artifact-server-snapshot}</url>
+			<snapshots/>
+		</repository>-->
+		<repository>
+			<id>central</id>
+			<url>http://repo.maven.apache.org/maven2</url>
+		</repository>
+		<repository>
+			<id>central2</id>
+			<url>http://mvnrepository.com</url>
+		</repository>
+		<repository>
+			<id>spring-release</id>
+			<url>https://repo.spring.io/libs-release</url>
+		</repository>
+	</repositories>
+
    <dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -90,46 +116,6 @@
 			<version>1.3.168</version>
 	 </dependency>
 	 
-	<!--  <dependency>
-			<groupId>org.apache.camel</groupId>
-			<artifactId>camel-jms</artifactId>
-			<version>2.15.1</version>
-		</dependency>
-       <dependency>
-			<groupId>org.apache.camel</groupId>
-			<artifactId>camel-stream</artifactId>
-			<version>2.15.1</version>
-		</dependency>  -->
-		
-		<!-- <dependency>
-			<groupId>org.apache.activemq</groupId>
-			<artifactId>activemq-camel</artifactId>
-			<version>5.6.0</version>
-		</dependency> -->
-		
-      
-    <!--   <dependency>
-            <groupId>org.apache.camel</groupId>
-            <artifactId>camel-core</artifactId>
-            <version>2.15.1</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.camel</groupId>
-            <artifactId>camel-spring</artifactId>
-            <version>2.15.1</version>
-       </dependency> -->
-       
-		<!-- <dependency>
-			<groupId>org.apache.activemq</groupId>
-			<artifactId>activemq-pool</artifactId>
-			<version>5.11.1</version>
-		</dependency> 		
-	
-		<dependency>
-			<groupId>org.apache.camel</groupId>
-			<artifactId>camel-spring</artifactId>
-			<version>2.15.1</version>
-		</dependency>-->
 
 	   <dependency>
 		   <groupId>org.eventbus</groupId>
@@ -142,9 +128,32 @@
 		   <version>0.0.1-SNAPSHOT</version>
 	   </dependency>
 
+	   <dependency>
+		   <groupId>org.apache.camel</groupId>
+		   <artifactId>camel-restlet</artifactId>
+		   <version>${camel.version}</version>
+	   </dependency>
+	   <dependency>
+		   <groupId>org.restlet.jee</groupId>
+		   <artifactId>org.restlet</artifactId>
+		   <version>2.2.3</version>
+	   </dependency>
 
-    
-  </dependencies>
+	  <dependency>
+		   <groupId>org.restlet.jee</groupId>
+		   <artifactId>org.restlet.ext.spring</artifactId>
+		   <version>2.2.3</version>
+	   </dependency>
+
+
+
+	   <dependency>
+		   <groupId>org.restlet.jee</groupId>
+		   <artifactId>org.restlet.ext.fileupload</artifactId>
+		   <version>2.1.4</version>
+	   </dependency>
+
+   </dependencies>
   
   
 </project>

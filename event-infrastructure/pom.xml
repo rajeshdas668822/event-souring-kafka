@@ -8,6 +8,32 @@
 	</parent>
 	<artifactId>event-infrastructure</artifactId>
 
+	<dependencyManagement>
+	<dependencies>
+	<!-- https://mvnrepository.com/artifact/org.drools/drools-bom -->
+	<!--<dependency>
+		<groupId>org.drools</groupId>
+		<artifactId>drools-core</artifactId>
+		<version>6.5.0.Final</version>
+	</dependency>-->
+
+    <dependency>
+        <groupId>org.drools</groupId>
+        <artifactId>drools-compiler</artifactId>
+        <version>6.5.0.Final</version>
+    </dependency>
+
+
+		<dependency>
+			<groupId>org.kie</groupId>
+			<artifactId>kie-ci</artifactId>
+			<version>6.5.0.Final</version>
+		</dependency>
+
+	</dependencies>
+	</dependencyManagement>
+
+
 	<dependencies>
 
 		<dependency>
@@ -20,6 +46,19 @@
 			<artifactId>gson</artifactId>
 			<version>2.6.2</version>
 		</dependency>
+
+		<dependency>
+			<groupId>org.drools</groupId>
+			<artifactId>drools-core</artifactId>
+			<version>6.5.0.Final</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.drools</groupId>
+			<artifactId>drools-compiler</artifactId>
+			<version>6.5.0.Final</version>
+		</dependency>
+
 
 		<!--<dependency>
 			<groupId>org.apache.camel</groupId>
@@ -55,16 +94,14 @@
 			<version>1.7.12</version>
 		</dependency>
 
+		<!-- https://mvnrepository.com/artifact/org.codehaus.groovy/groovy-all -->
 		<dependency>
-			<groupId>org.apache.camel</groupId>
-			<artifactId>camel-mail</artifactId>
-			<version>2.15.1</version>
+			<groupId>org.codehaus.groovy</groupId>
+			<artifactId>groovy-all</artifactId>
+			<version>2.4.9</version>
 		</dependency>
-		<dependency>
-			<groupId>org.apache.camel</groupId>
-			<artifactId>camel-spring-javaconfig</artifactId>
-			<version>2.15.1</version>
-		</dependency>
+
+		
 		<dependency>
 			<groupId>com.sun.mail</groupId>
 			<artifactId>imap</artifactId>
@@ -75,6 +112,13 @@
 			<artifactId>hazelcast-all</artifactId>
 			<version>3.7.1</version>
 		</dependency>
+
+		<dependency>
+				<groupId>com.monitorjbl</groupId>
+				<artifactId>xlsx-streamer</artifactId>
+				<version>1.0.1</version>
+	   </dependency>
+
 	</dependencies>
 
 </project>

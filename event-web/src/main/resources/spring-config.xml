@@ -21,6 +21,23 @@
 		</property>
 	</bean>
 
-   <import resource="classpath*:camel-client-message.xml"/>
+	<bean id="RestletComponent" class="org.restlet.Component" >
+
+	</bean>
+<!--
+	<bean id="RestletComponentService" class="org.springboot.eventbus.service.CustomRestletComponent" >
+		&lt;!&ndash;<constructor-arg name="component" ref="RestletComponent" />&ndash;&gt;
+		<constructor-arg name="disableStreamCache" value="true"/>
+	</bean>-->
+
+
+	          <bean id="RestletComponentService" class="org.apache.camel.component.restlet.RestletComponent" >
+		<constructor-arg ref="RestletComponent" />
+	</bean>
+
+
+	<import resource="classpath*:camel-client-message.xml"/>
+
+
 
 </beans>

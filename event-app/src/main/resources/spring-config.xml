@@ -69,7 +69,7 @@
 			<props>
 				<prop key="hibernate.hbm2ddl.auto">create-drop</prop>
 				<prop key="hibernate.dialect">org.hibernate.dialect.H2Dialect</prop>
-				<prop key="hibernate.show_sql">true</prop>
+				<prop key="hibernate.show_sql">false</prop>
 				<prop key="hibernate.format_sql">true</prop>				
 				<prop key="hibernate.order_inserts">true</prop>
 				<prop key="hibernate.order_updates">true</prop>
@@ -84,19 +84,23 @@
 				<prop key="hibernate.enable_lazy_load_no_trans">true</prop>
 			</props>
 		</property>
-	</bean>	
-   <!-- <bean id="userDao" class="org.springboot.angular.demo.usermanagment.security.impl.UserStaticDao"/> -->
-   
+	</bean>
 
-	<!-- <import resource="classpath*:jms-broker.xml"/>	 
-	        
- <camelContext id="camel-server" xmlns="http://camel.apache.org/schema/spring">		
-  <template id="camelTemplate"/>
-	  <route>
-	    <from uri="jms:queue:workflow"/>
-	    <to uri="bean:workFlowService"/>
-	  </route>
-</camelContext> -->
+
+	<bean id="hazelcastLifecycle" class="com.hazelcast.core.LifecycleService"
+		  factory-bean="hazelcastInstance" factory-method="getLifecycleService"
+		  destroy-method="shutdown" />
+
+	<bean id="config" class="com.hazelcast.config.Config">
+		<constructor-arg type="java.lang.String" value="HZ.INSTANCE" />
+	</bean>
+
+	<bean id="hazelcastInstance" class="com.hazelcast.core.Hazelcast" factory-method="newHazelcastInstance">
+		<constructor-arg type="com.hazelcast.config.Config" ref="config"/>
+	</bean>
+
+
+
    
 
 </beans>

@@ -4,36 +4,36 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
        http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd">
-	
-	
-	<import resource="classpath*:jms-broker.xml"/>
+
+
+    <import resource="classpath*:jms-broker.xml"/>
     <import resource="classpath*:jms-connector-config.xml"/>
 
-		<camelContext id="camel-server" xmlns="http://camel.apache.org/schema/spring" >
-            <jmxAgent id="agent" disabled="true"/>
-  <template id="camelTemplate"/>
+    <camelContext id="camel-server" xmlns="http://camel.apache.org/schema/spring">
+        <jmxAgent id="agent" disabled="true"/>
+        <template id="camelTemplate"/>
 
-      <!--  <route>
-            <from uri="jms:queue:requestQueue"/>
-            <log message="body============${body}"/>
-            <to uri="bean:activeMqCommandConsumer"/>
-        </route>-->
+        <!--  <route>
+              <from uri="jms:queue:requestQueue"/>
+              <log message="body============${body}"/>
+              <to uri="bean:activeMqCommandConsumer"/>
+          </route>-->
 
         <route>
-                <from uri="jms:topic:commandHandler"/>
-                <!--<log message="body============${body}"/>-->
-                <to uri="bean:activeMqCommandConsumer"/>
+            <from uri="jms:topic:commandHandler"/>
+            <!--<log message="body============${body}"/>-->
+            <to uri="bean:activeMqCommandConsumer"/>
         </route>
 
 
-            <route>
-                <from uri="jms:queue:commandHandler"/>
-                <!--<log message="body============${body}"/>-->
-                <to uri="bean:activeMqCommandConsumer"/>
-            </route>
-  </camelContext>
-		
-	   
-		
-		     
-   </beans>
+        <route>
+            <from uri="jms:queue:commandHandler"/>
+            <!--<log message="body============${body}"/>-->
+            <to uri="bean:activeMqCommandConsumer"/>
+        </route>
+
+
+    </camelContext>
+
+
+</beans>

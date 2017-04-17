@@ -27,7 +27,7 @@ import static org.junit.Assert.assertNotNull;
  * Created by rdas on 8/24/2016.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("classpath:spring-activiti.cfg.xml")
+@ContextConfiguration("classpath:spring-config.xml")
 public class OrderFlowProcessTest extends AbstractTest {
 
 
