@@ -52,6 +52,7 @@ public class LoginController {
 	}
 	
    @RequestMapping(value="/validateUser",method = RequestMethod.POST)
+   @ResponseBody
    public  boolean verifyUser(@RequestBody User user){
 		boolean validUser=false;
 		User storedUser = existingUsers.get(user.getUserId());
@@ -67,6 +68,7 @@ public class LoginController {
    
    
    @RequestMapping(value="/users",method = RequestMethod.GET)
+   @ResponseBody
    public  Collection<User> lodUser(){		
 	   return existingUsers.values();
 	 }
