@@ -38,22 +38,31 @@ Separate request response Queue:
       
       
       
-   It has four modules.
+   #It has four modules.
     **event-app**
     **event-domain**
     **event-infrastructure**
     **event-web**
 
 
-       
+  # How to Start up the application
+  
    Event-app is the brain of the project and contains all service implementation.
    It works on in memory database h2 and the communication happens via active MQ.
 
-   1) start ApplicationApiBootstrap in org.springboot.eventbus.starter to start the services.
+   1) Start ApplicationApiBootstrap in org.springboot.eventbus.starter to start the services.
 
    2) Down load apache-activemq and  start ActiveMQ so that communication can happen via activeMQ.
 
    3) Start WebAppInitializer  in org.springboot.eventbus.web.starter package.
 
    4) Use http://localhost:8080/ to access the web page.
+   
+   
+   # Open Source Technology Used.
+     1) Activiti
+     2) Camel
+     3) Spring
+     4) Drool
+     5) Hazlecast
 
